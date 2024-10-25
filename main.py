@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import models
 import models.db_session
 
@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Hello World!"
+    return render_template("index.html")
 
 
 @app.route("/profile")

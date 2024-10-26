@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import models
 import models.db_session
 
@@ -7,42 +7,42 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Hello World!"
+    return render_template("index.html", title="Главная")
 
 
 @app.route("/profile")
 def profile():
-    return "This is my profile"
+    return render_template("index.html", title="Профиль")
 
 
 @app.route("/register")
 def register():
-    return "Register to our service"
+    return render_template("index.html", title="Регистрация")
 
 
 @app.route("/login")
 def login():
-    return "Login to your account"
+    return render_template("index.html", title="Войти")
 
 
 @app.route("/logout")
 def logout():
-    return "Logout from your account"
+    return "Выход из аккаунта"
 
 
 @app.route("/catalog")
 def catalog():
-    return "This is the catalog of books"
+    return render_template("index.html", title="Каталог")
 
 
 @app.route("/catalog/<int:book_id>")
 def book_in_catalog(book_id: int):
-    return f"This is the book with id {book_id}"
+    return render_template("index.html", title="Информация о книге")
 
 
 @app.route("/read/<int:book_id>")
 def read_book_in_catalog(book_id: int):
-    return f"You can read this book with id {book_id}"
+    return render_template("index.html", title="Читать книгу")
 
 
 def main():

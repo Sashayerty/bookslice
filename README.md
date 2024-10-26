@@ -29,7 +29,7 @@ venv/Scripts/activate
 ### 5. Скачиваем зависимости
 
 ```bash
-pip install -t ./requirements/prod.txt
+pip install -r ./requirements/prod.txt
 ```
 
 ### 6. Запускаем проект

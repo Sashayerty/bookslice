@@ -40,8 +40,8 @@ def book_in_catalog(book_id: int):
     return render_template("index.html", title="Информация о книге")
 
 
-@app.route("/read/<int:book_id>")
-def read_book_in_catalog(book_id: int):
+@app.route("/read/<int:book_id>/<int:page>")
+def read_book_in_catalog(book_id: int, page: int):
     return render_template("index.html", title="Читать книгу")
 
 

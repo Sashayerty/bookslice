@@ -8,15 +8,13 @@ body {
     background-color: #1b1b1b;
     color: #ffffff;
 }
-.login-container {
-    width: 300px;
-    text-align: center;
-}
+
 .login-container h2 {
     font-size: 24px;
     margin-bottom: 20px;
     color: #ffffff;
 }
+
 .input-field {
     width: 100%;
     padding: 12px;
@@ -27,9 +25,11 @@ body {
     color: #ffffff;
     font-size: 16px;
 }
+
 .input-field::placeholder {
     color: rgba(255, 255, 255, 0.6);
 }
+
 .login-button {
     width: 100%;
     padding: 12px;
@@ -40,10 +40,13 @@ body {
     color: #ffffff;
     font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
+
 .login-button:hover {
     background-color: #007acc;
 }
+
 .forgot-password {
     display: block;
     margin-top: 10px;
@@ -51,17 +54,28 @@ body {
     text-decoration: none;
     font-size: 14px;
 }
+
 .forgot-password:hover {
     text-decoration: underline;
 }
+
 .register {
     margin-top: 20px;
     font-size: 14px;
 }
+
 .register a {
     color: #0099e5;
     text-decoration: none;
 }
+
 .register a:hover {
     text-decoration: underline;
+}
+
+.form-header {
+    text-align: center; /* Центрирование заголовка */
+    font-size: 24px; /* Размер текста */
+    margin-bottom: 20px; /* Отступ снизу */
+    color: #ffffff;
 }

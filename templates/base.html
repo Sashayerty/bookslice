@@ -15,8 +15,8 @@
     <div class="container">
         <div class="row">
             <div class="col-xs col-sm col-md-5 col-lg-5 col-xl-5 col-xxl-5">
-                <a href="/" class="button">
-                    <img src="../static/img/icons8-литература-50.png" alt="BookSlice" class="header-book-image">
+                <a href="/" class="nav-head">
+                    BookSlice
                 </a>
                 
             </div>
@@ -32,30 +32,21 @@
                     Каталог
                 </a>
             </div>
-            <div class="col-xs col-sm col-md-3 col-lg-3 col-xl-3 col-xxl-3">
-                <div class="row">
-                    <div class="col">
-                        <a href="/search" ; class="nav-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="#008FC3"
-                                class="bi bi-search" viewBox="0 0 16 16">
-                                <path
-                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                            </svg>
-                            Поиск
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <form class="col-xs col-sm col-md-3 col-lg-3 col-xl-3 col-xxl-3" role="search">
+                <input type="search" class="form-control form-control-dark text-bg-white" placeholder="Искать книгу..." aria-label="Search">
+            </form>
             <div class="col-xs col-sm col-md-1 col-lg-1 col-xl-1 col-xxl-1">
                 <a href="/profile" class="profile-button">
-                    <img src="../static/img/icons8-профиль-пользователя-48.png" alt="Профиль" class="profile-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                      </svg>
                 </a>
             </div>
 
         </div>
     </div>
-    {% block content %}
-    {% endblock content %}
+
 </body>
 
 </html>

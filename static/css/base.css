@@ -4,12 +4,14 @@
 body {
     background-color: #191A1F;
     color: #ffffff;
-    padding-top: 50px;
+    padding-top: 20px;
     font-family: 'Inter', sans-serif;
     /* Применение шрифта Inter ко всему тексту */
     font-size: 22px;
     /* Размер текста по умолчанию */
 }
+
+
 
 .header-text {
     text-align: left;
@@ -126,8 +128,12 @@ body {
 }
 
 .nav-head {
-    color: #ffffff;
-    font-size: 35px;
+    font-size: 35px !important;
+    font-weight: bold;
+    color: #ffffff !important;
+    margin-bottom: 20px; /* Отступ для пространства подчеркивания */
+    font-family: 'Inter', sans-serif !important;
+    text-decoration: none;
 }
 
 .nav-link {
@@ -211,3 +217,24 @@ body {
     margin: 0 auto;
     /* Центрирует изображение внутри колонки */
 }
+
+.form-control {
+    background-color: #191A1F; /* Темный фон для поля ввода */
+    color: white; /* Цвет текста в поле ввода */
+}
+
+.form-control::placeholder {
+    color: white; /* Цвет текста в placeholder */
+    opacity: 0.5; /* Можно настроить непрозрачность для лучшего вида */
+}
+
+.form-control:focus {
+    background-color: #191A1F; /* Оставляем темный фон при фокусе */
+    color: white; /* Цвет текста при фокусе */
+}
+
+.form-control:focus::placeholder {
+    color: white; /* Цвет placeholder при фокусе */
+    opacity: 0.5; /* Можно настроить непрозрачность для лучшего вида */
+}
+

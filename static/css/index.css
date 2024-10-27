@@ -1,6 +1,3 @@
-/* Подключаем шрифт Inter */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
 body {
     background-color: #191A1F;
     color: #ffffff;
@@ -148,8 +145,8 @@ body {
 .nav-head::after {
     content: "";
     display: block;
-    width: 100px; /* Длина подчеркивания */
-    height: 6px; /* Толщина подчеркивания */
+    width: 70px; /* Длина подчеркивания */
+    height: 3px; /* Толщина подчеркивания */
     background-color: #ff8c1a; /* Цвет подчеркивания */
     margin-top: 5px; /* Расстояние от текста до подчеркивания */
 }
@@ -157,7 +154,7 @@ body {
 .nav-link {
     color: #ffffff !important;
     /* Принудительное применение белого цвета */
-    font-size: 25px !important;
+    font-size: 30px !important;
     /* Принудительное применение размера шрифта */
     font-family: 'Inter', sans-serif !important;
     /* Принудительное применение шрифта */
@@ -214,14 +211,44 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-/* Стили для круглой кнопки */
+
+.header-book-image {
+    max-width: 100%;
+    /* Ограничивает ширину изображения */
+    height: auto;
+    /* Автоматически подстраивает высоту */
+    display: block;
+    /* Убирает отступы вокруг изображения */
+    margin: 0 auto;
+    /* Центрирует изображение внутри колонки */
+}
+
+.form-control {
+    background-color: #191A1F; /* Темный фон для поля ввода */
+    color: white; /* Цвет текста в поле ввода */
+}
+
+.form-control::placeholder {
+    color: white; /* Цвет текста в placeholder */
+    opacity: 0.5; /* Можно настроить непрозрачность для лучшего вида */
+}
+
+.form-control:focus {
+    background-color: #191A1F; /* Оставляем темный фон при фокусе */
+    color: white; /* Цвет текста при фокусе */
+}
+
+.form-control:focus::placeholder {
+    color: white; /* Цвет placeholder при фокусе */
+    opacity: 0.5; /* Можно настроить непрозрачность для лучшего вида */
+}
+
 .profile-button {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50px;
     height: 50px;
-    background-color: #00bfff;
     border-radius: 50%;
     /* Круглая форма */
     text-decoration: none;
@@ -242,16 +269,5 @@ body {
 
 /* Эффект при наведении */
 .profile-button:hover {
-    background-color: #008fc3;
-}
-
-.header-book-image {
-    max-width: 100%;
-    /* Ограничивает ширину изображения */
-    height: auto;
-    /* Автоматически подстраивает высоту */
-    display: block;
-    /* Убирает отступы вокруг изображения */
-    margin: 0 auto;
-    /* Центрирует изображение внутри колонки */
+    opacity: 0.9;
 }

@@ -29,9 +29,16 @@
                 </a>
             </div>
             <div class="col-xs col-sm col-md-1 col-lg-1 col-xl-1 col-xxl-1">
-                <a href="/login" class="btn btn-primary">
-                    Войти
-                </a>
+                {% if user_is_auth %}
+                    <a href="/profile" class="btn btn-primary">
+                        Профиль
+                    </a>
+                {% else %}
+                    <a href="/login" class="btn btn-primary">
+                        Войти
+                    </a>
+                {% endif %}
+                
             </div>
         </div>
     </div>

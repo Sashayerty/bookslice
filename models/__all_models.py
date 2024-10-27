@@ -1,8 +1,2 @@
-from . import (
-    user,
-    books,
-    text_of_book,
-    authors,
-    books_of_user,
-    description_of_user,
-)
+from . import description_of_user  # noqa
+from . import authors, books, books_of_user, text_of_book, user  # noqa

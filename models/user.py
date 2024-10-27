@@ -1,8 +1,10 @@
 import datetime
-from flask_login import UserMixin
+
 import sqlalchemy
+from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from .db_session import SqlAlchemyBase
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(SqlAlchemyBase, UserMixin):
@@ -12,9 +14,11 @@ class User(SqlAlchemyBase, UserMixin):
         sqlalchemy.Integer, primary_key=True, autoincrement=True
     )  # noqa
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    email = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)  # noqa
+    email = sqlalchemy.Column(
+        sqlalchemy.String, unique=True, nullable=False
+    )  # noqa
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    speed_of_reading = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
+    speed_of_reading = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     created_date = sqlalchemy.Column(
         sqlalchemy.DateTime, default=datetime.datetime.now
     )  # noqa

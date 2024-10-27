@@ -106,6 +106,14 @@ body {
     padding: 20px;
     margin: 10px;
     height: auto;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+}
+
+.col {
+    display: flex;
+    align-items: center;
 }
 
 /* Цвета границ для блоков функций */
@@ -126,19 +134,53 @@ body {
     justify-content: center;
 }
 
+/* Контейнер с заголовком */
 .nav-head {
-    color: #ffffff;
+    position: relative;
     font-size: 35px;
+    font-weight: bold;
+    color: #ffffff;
+    display: inline-block;
+    margin-bottom: 20px; /* Отступ для пространства подчеркивания */
+}
+
+/* Псевдоэлемент для подчеркивания */
+.nav-head::after {
+    content: "";
+    display: block;
+    width: 100px; /* Длина подчеркивания */
+    height: 6px; /* Толщина подчеркивания */
+    background-color: #ff8c1a; /* Цвет подчеркивания */
+    margin-top: 5px; /* Расстояние от текста до подчеркивания */
 }
 
 .nav-link {
     color: #ffffff !important;
     /* Принудительное применение белого цвета */
-    font-size: 30px !important;
+    font-size: 25px !important;
     /* Принудительное применение размера шрифта */
     font-family: 'Inter', sans-serif !important;
     /* Принудительное применение шрифта */
 }
+
+.nav-link-underline-1 {
+    position: relative;
+    color: #ffffff;
+    font-size: 22px;
+    text-decoration: none; /* Убираем стандартное подчеркивание */
+}
+
+.nav-link-underline-1::after {
+    content: "";
+    display: block;
+    width: 200px; /* Длина подчеркивания, можете изменить при необходимости */
+    height: 3px; /* Толщина подчеркивания */
+    background-color: #1acaff; /* Цвет подчеркивания */
+    position: absolute;
+    bottom: -5px; /* Расстояние от текста до подчеркивания */
+    left: 0;
+}
+
 
 .nav-link.active {
     font-size: 22px;

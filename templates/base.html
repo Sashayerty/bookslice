@@ -1,14 +1,42 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/base.css">
     <script src="../static/js/bootstrap.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 </head>
+
 <body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs col-sm col-md-5 col-lg-5 col-xl-5 col-xxl-5">
+                <img src="../static/img/icons8-литература-50.png" alt="BookSlice" class="header-book-image">
+            </div>
+            <div class="col-xs col-sm col-md-2 col-lg-2 col-xl-2 col-xxl-">
+                <a href="/catalog" ; class="nav-link">
+                    Каталог
+                </a>
+            </div>
+            <div class="col-xs col-sm col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                <a href="/search" ; class="nav-link">
+                    Поиск
+                </a>
+            </div>
+            <div class="col-xs col-sm col-md-1 col-lg-1 col-xl-1 col-xxl-1">
+                <a href="/profile" class="profile-button">
+                    <img src="../static/img/icons8-профиль-пользователя-48.png" alt="Профиль" class="profile-icon">
+                </a>
+            </div>
+
+        </div>
+    </div>
     {% block content %}
     {% endblock content %}
 </body>
+
 </html>

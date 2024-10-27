@@ -105,7 +105,6 @@ body {
     border-radius: 10px;
     padding: 20px;
     margin: 10px;
-    height: auto;
 }
 
 /* Цвета границ для блоков функций */
@@ -179,7 +178,6 @@ body {
     align-items: center;
     width: 50px;
     height: 50px;
-    background-color: #00bfff;
     border-radius: 50%;
     /* Круглая форма */
     text-decoration: none;
@@ -200,7 +198,7 @@ body {
 
 /* Эффект при наведении */
 .profile-button:hover {
-    background-color: #008fc3;
+    opacity: 0.9;
 }
 
 .header-book-image {

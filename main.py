@@ -12,17 +12,17 @@ def index():
 
 @app.route("/profile")
 def profile():
-    return render_template("index.html", title="Профиль")
+    return render_template("profile.html", title="Профиль")
 
 
 @app.route("/register")
 def register():
-    return render_template("index.html", title="Регистрация")
+    return render_template("register.html", title="Регистрация")
 
 
 @app.route("/login")
 def login():
-    return render_template("index.html", title="Войти")
+    return render_template("login.html", title="Войти")
 
 
 @app.route("/logout")
@@ -32,7 +32,7 @@ def logout():
 
 @app.route("/catalog")
 def catalog():
-    return render_template("index.html", title="Каталог")
+    return render_template("catalog.html", title="Каталог")
 
 
 @app.route("/catalog/<int:book_id>")

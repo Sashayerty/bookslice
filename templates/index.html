@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container text-center">
         <div class="row">
             <div class="col-xs col-sm col-md-5 col-lg-5 col-xl-5 col-xxl-5">
                 <h1 class="nav-head">
@@ -19,19 +19,19 @@
                 </h1>
             </div>
             <div class="col-xs col-sm col-md-2 col-lg-2 col-xl-2 col-xxl-">
-                <a href="#" ; class="nav-link">
+                <a href="/catalog" ; class="nav-link">
                     Каталог
                 </a>
             </div>
             <div class="col-xs col-sm col-md-3 col-lg-3 col-xl-3 col-xxl-3">
-                <a href="#" ; class="nav-link">
+                <a href="/search" ; class="nav-link">
                     Поиск
                 </a>
             </div>
             <div class="col-xs col-sm col-md-1 col-lg-1 col-xl-1 col-xxl-1">
-                <button class="btn btn-primary">
+                <a href="/login" class="btn btn-primary">
                     Войти
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -49,28 +49,62 @@
 
 
     <!-- Features Section -->
-    <div class="fixed-features">
+    <div class="features">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-xs col-sm col-md col-lg-4 col-xl-4 col-xxl-4">
                     <div class="feature-box cross-platform">
-                        <i class="fas fa-mobile-alt fa-2x mb-3"></i>
-                        <h5 class="feature-txt-high">Кроссплатформенность</h5>
-                        <p class="feature-txt-low">Разработано для всех существующих платформ</p>
+                        <div class="row align-middle">
+                            <div class="col-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" fill="#EE2929"
+                                    class="bi bi-phone" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                                    <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                                </svg>
+                            </div>
+                            <div class="col-9">
+                                <h5 class="feature-txt-high">Кроссплатформа</h5>
+                                <p class="feature-txt-low">Разработано для всех существующих платформ</p>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs col-sm col-md col-lg-4 col-xl-4 col-xxl-4">
                     <div class="feature-box ease-of-use">
-                        <i class="fas fa-star fa-2x mb-3"></i>
-                        <h5 class="feature-txt-high">Легкость</h5>
-                        <p class="feature-txt-low">Легкоосваиваемый интерфейс</p>
+                        <div class="row">
+                            <div class="col-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#2FD92F"
+                                    class="bi bi-asterisk" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1" />
+                                </svg>
+                            </div>
+                            <div class="col-10">
+                                <h5 class="feature-txt-high">Легкость</h5>
+                                <p class="feature-txt-low">Легкоосваиваемый интерфейс</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs col-sm col-md col-lg-4 col-xl-4 col-xxl-4">
                     <div class="feature-box free">
-                        <i class="fab fa-github fa-2x mb-3"></i>
-                        <h5 class="feature-txt-high">Бесплатно</h5>
-                        <p class="feature-txt-low">Открытый исходный код на GitHub</p>
+                        <div class="row">
+                            <div class="col-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                    fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+                                </svg></div>
+                            <div class="col-10">
+                                <h5 class="feature-txt-high">Бесплатно</h5>
+                                <p class="feature-txt-low">Открытый исходный код на GitHub</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

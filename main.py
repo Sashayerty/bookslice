@@ -29,10 +29,10 @@ def load_user(user_id):
 @app.route("/")
 def index():
     return render_template(
-        "index.html",
-        title="Главная",
-        user_is_auth=current_user.is_authenticated,
-    )
+            "index.html",
+            title="Главная",
+            user_is_auth=current_user.is_authenticated,
+        )
 
 
 @app.route("/profile")

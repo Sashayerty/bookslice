@@ -6,6 +6,7 @@ from flask_login import (LoginManager, current_user, login_required,
                          login_user, logout_user)
 
 import forms
+import forms.chat
 import forms.login_form
 import forms.reg_form
 import models
@@ -37,10 +38,29 @@ def index():
 
 @app.route("/profile")
 def profile():
+    db_sess = models.db_session.create_session()
+    name = db_sess.query(models.user.User).get(current_user.id).name
+    email = db_sess.query(models.user.User).get(current_user.id).email
+    speed_of_reading = (
+        db_sess.query(models.user.User).get(current_user.id).speed_of_reading
+    )
     return render_template(
         "profile.html",
         title="Профиль",
-    )  # noqa
+        name=name,
+        email=email,
+        id=current_user.id,
+        user_is_auth=current_user.is_authenticated,
+        speed_of_reading=speed_of_reading,
+    )
+
+
+@app.route("/check-speed-of-reading")
+def check_speed_of_reading():
+    db_sess = models.db_session.create_session()
+    db_sess.query(models.user.User).get(current_user.id).speed_of_reading = 120
+    db_sess.commit()
+    return redirect("/profile")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -110,19 +130,45 @@ def logout():
     return redirect("/")
 
 
+@app.route("/ask", methods=["GET", "POST"])
+def ask():
+    form = forms.chat.ChatForm()
+    return render_template(
+        "ask.html",
+        title="Спросить ИИ",
+        form=form,
+        user_is_auth=current_user.is_authenticated,
+    )
+
+
 @app.route("/catalog")
 def catalog():
-    return render_template("catalog.html", title="Каталог")
+    return render_template(
+        "catalog.html",
+        title="Каталог",
+        user_is_auth=current_user.is_authenticated,
+    )
 
 
 @app.route("/catalog/<int:book_id>")
 def book_in_catalog(book_id: int):
-    return render_template("index.html", title="Информация о книге")
+    db_sess = models.db_session.create_session()
+    book = db_sess.query(models.books.Books).get(book_id)
+    return render_template(
+        "about_book.html",
+        title="Информация о книге",
+        user_is_auth=current_user.is_authenticated,
+        book=book
+    )
 
 
 @app.route("/read/<int:book_id>/<int:page>")
 def read_book_in_catalog(book_id: int, page: int):
-    return render_template("index.html", title="Читать книгу")
+    return render_template(
+        "index.html",
+        title="Читать книгу",
+        user_is_auth=current_user.is_authenticated,
+    )
 
 
 def main():

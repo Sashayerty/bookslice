@@ -1,38 +1,47 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/style.css">
     <script src="../static/js/bootstrap.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 </head>
-<body>
-    <h1 class="text-center mb-5 mt-5">Войти в аккаунт</h1>
-    <div class="container d-flex justify-content-center">
-        <form action="" method="post" style="width: 30rem;">
-            {{ form.hidden_tag() }}
-            <p>
-                {{ form.email(class="form-control focus-ring focus-ring-dark py-1 px-1 text-decoration-none border rounded-2", type="email", placeholder="Почта") }}<br>
-                {% for error in form.email.errors %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ error }}
-                    </div>
+
+<body class="bg-light">
+    <div class="login container d-grid align-items-center justify-content-center">
+        <div class="login-container shadow-lg p-5">
+            <h1 class="login-title fs-2">Войти в аккаунт</h1>
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.email(class="form-control focus-ring focus-ring-dark py-1 px-1 text-decoration-none border
+                    rounded-2", type="email", placeholder="Почта") }}<br>
+                    {% for error in form.email.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
                 {% endfor %}
-            </p>
-            <p>
-                {{ form.password(class="form-control focus-ring focus-ring-dark py-1 px-1 text-decoration-none border rounded-2", type="password", placeholder="Пароль") }}<br>
-                {% for error in form.password.errors %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ error }}
-                    </div>
+                </p>
+                <p>
+                    {{ form.password(class="form-control focus-ring focus-ring-dark py-1 px-1 text-decoration-none
+                    border rounded-2", type="password", placeholder="Пароль") }}<br>
+                    {% for error in form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
                 {% endfor %}
-            </p>
-            <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-            <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-            <p class="text-center">Нет учетной записи?<br><a href="/register" style="text-decoration: none;">Зарегистрироваться</a></p>
-            <div>{{ message }}</div>
-        </form>
+                </p>
+                <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+                <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
+                <p class="text-center">Нет учетной записи?<br><a href="/register"
+                        style="text-decoration: none;">Зарегистрироваться</a></p>
+                <div>{{ message }}</div>
+            </form>
+        </div>
     </div>
 </body>
+
 </html>

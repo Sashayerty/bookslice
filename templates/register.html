@@ -2,16 +2,17 @@
 <html lang="ru">
 <head>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/login-reg.css">
+    <link rel="stylesheet" href="../static/css/style.css">
     <script src="../static/js/bootstrap.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 </head>
 <body class="bg-light">
-    <div class="container d-flex justify-content-center flex-column align-items-center" style="min-height: 100vh;">
-        <h1 class="form-header">Зарегистрировать аккаунт</h1>
-        <form action="" method="post" style="width: 30rem;">
+    <div class="login container d-grid align-items-center justify-content-center">
+        <div class="login-container shadow-lg p-5">
+            <h1 class="register-title fs-2">Зарегистрировать аккаунт</h1>
+        <form action="" method="post">
             {{ form.hidden_tag() }}
             <p>
                 {{ form.name(class="form-control focus-ring focus-ring-dark py-1 px-1 text-decoration-none border rounded-2", placeholder="Никнейм") }}<br>
@@ -49,6 +50,7 @@
             <p class="text-center">Уже есть аккаунт?<br><a href="/login" style="text-decoration: none;">Войти</a></p>
             {{message}}
         </form>
+        </div>
     </div>
 </body>
 

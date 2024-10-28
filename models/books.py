@@ -5,7 +5,7 @@ import sqlalchemy
 from .db_session import SqlAlchemyBase
 
 
-class User(SqlAlchemyBase):
+class Books(SqlAlchemyBase):
     __tablename__ = "books"
 
     id = sqlalchemy.Column(

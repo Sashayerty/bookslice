@@ -36,6 +36,21 @@ body {
     font-family: 'Inter';
 }
 
+.highlighted-text {
+  position: relative;
+  display: inline-block;
+}
+
+.highlighted-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0px; /* Расстояние от текста */
+  width: 60px;
+  height: 3px;
+  background-color: orange;
+}
+
 .container-f-1 {
     border: 4px solid #198754;
     border-radius: 20px;
@@ -51,4 +66,28 @@ body {
     border: 4px solid #6c757d;
     border-radius: 20px;
     min-height: 8rem;
+}
+
+.login {
+  height: 100vh;
+}
+
+.login-container {
+  border-radius: 20px;
+  height: auto;
+}
+
+.profile {
+  height: 80vh;
+}
+
+.profile-container {
+  border-radius: 20px;
+  height: auto;
+  border: 2px solid #6c757d;
+}
+
+.book {
+  border: 3px solid #6c757d;
+  border-radius: 20px;
 }

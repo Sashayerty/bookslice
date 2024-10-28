@@ -1,109 +1,43 @@
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/profile.css">
-    <script src="../static/js/bootstrap.js"></script>
-</head>
-
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-xs col-sm col-md-5 col-lg-5 col-xl-5 col-xxl-5">
-                <a href="/" class="nav-head user-select-none">
-                    BookSlice
-                </a>
-                
-            </div>
-            <div class="col-xs col-sm col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-                <a href="/catalog" ; class="nav-link ">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="#008FC3"
-                        class="bi bi-journal" viewBox="0 0 16 16">
-                        <path
-                            d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
-                        <path
-                            d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
-                    </svg>
-                    Каталог
-                </a>
-            </div>
-            <form class="col-xs col-sm col-md-3 col-lg-3 col-xl-3 col-xxl-3" role="search">
-                <input type="search" class="form-control form-control-dark text-bg-black" placeholder="Искать книгу..." aria-label="Search">
-            </form>
-            <div class="col-xs col-sm col-md-1 col-lg-1 col-xl-1 col-xxl-1">
-                <a href="/profile" class="profile-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                      </svg>
-                </a>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="divider-1"></div>
-
-    <div class="container">
-        <!-- Верхняя разделительная линия -->
-        
-
-        <!-- Иконка профиля и никнейм -->
-        <div class="profile-icon username">
-            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="#037AA6" class="bi bi-person-circle"
-                viewBox="0 0 16 16">
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                <path fill-rule="evenodd"
-                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-            </svg>
-        </div>
-        <div class="username">
-            Твой ник
-        </div>
-    </div>
-
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <!-- Верхняя разделительная линия -->
     
 
-        <!-- Нижняя разделительная линия -->
-        <div class="divider-2"></div>
-
-    <div class="container">
-        <!-- Информация о профиле -->
-        <div class="info-box">
-            <div class="text-infobox">
-                id: 123456789
-                Почта: example@mail.com
-            </div>
-            <a href="/logout" class="logout-link">
-                Выход из аккаунта
-            </a>
-        </div>
-
-        <!-- Поле "О себе" -->
-
-        <textarea class="about-box form-control form-control-dark text-bg-black"
-            placeholder="Введите информацию о себе..."></textarea>
-        <!-- Это место для текста пользователя -->
+    <!-- Иконка профиля и никнейм -->
+    <div class="profile-icon username">
+        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="#6c757d" class="bi bi-person-circle"
+            viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+            <path fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg>
     </div>
-    <script>
-        const aboutInput = document.querySelector('.about-box');
+    <div class="username">
+        {{ name }}
+    </div>
+</div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedText = localStorage.getItem('aboutText');
-            if (savedText) {
-                aboutInput.value = savedText;
-            }
-        });
 
-        aboutInput.addEventListener('input', () => {
-            localStorage.setItem('aboutText', aboutInput.value);
-        });
-    </script>
-    
-</body>
 
-</html>
+    <!-- Нижняя разделительная линия -->
+    <div class="divider-2"></div>
+
+<div class="container">
+    <!-- Информация о профиле -->
+    <div class="info-box">
+        <div class="text-infobox">
+            id: {{ id }}
+            Почта: {{ email }}
+        </div>
+        <a class="link-danger link-offset-2 link-underline-opacity-0" href="/logout">Выйти</a>
+    </div>
+
+    <!-- Поле "О себе" -->
+
+    <textarea class="about-box form-control form-control-dark text-bg-black"
+        placeholder="Введите информацию о себе..."></textarea>
+    <!-- Это место для текста пользователя -->
+</div>
+
+{% endblock content %}

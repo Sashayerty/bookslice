@@ -2,51 +2,59 @@
 <html lang="ru">
 
 <head>
+    <link rel="icon" type="image/png" href="../img/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="../img/favicon.svg" />
+    <link rel="shortcut icon" href="../img/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/apple-touch-icon.png" />
+    <link rel="manifest" href="../img/site.webmanifest" />
     <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/style.css">
     <script src="../static/js/bootstrap.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 </head>
 
-<body>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-xs col-sm col-md-5 col-lg-5 col-xl-5 col-xxl-5">
-                <a href="/" class="nav-head">
+<body class="bg-light">
+    <header class="p-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center fs-4 mb-2 me-lg-5 mb-lg-0 link-body-emphasis text-decoration-none">
                     BookSlice
                 </a>
-                
-            </div>
-            <div class="col-xs col-sm col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-                <a href="/catalog" ; class="nav-link ">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="#008FC3"
-                        class="bi bi-journal" viewBox="0 0 16 16">
-                        <path
-                            d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
-                        <path
-                            d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
-                    </svg>
-                    Каталог
-                </a>
-            </div>
-            <form class="col-xs col-sm col-md-3 col-lg-3 col-xl-3 col-xxl-3" role="search">
-                <input type="search" class="form-control form-control-dark text-bg-white" placeholder="Искать книгу..." aria-label="Search">
-            </form>
-            <div class="col-xs col-sm col-md-1 col-lg-1 col-xl-1 col-xxl-1">
-                <a href="/profile" class="profile-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                      </svg>
-                </a>
-            </div>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/catalog" class="nav-link px-2 link-body-emphasis">Каталог</a></li>
+                    <li><a href="/ask" class="nav-link px-2 link-body-emphasis">Спросить ИИ</a></li>
+                </ul>
 
+                {% if user_is_auth %}
+                <div class="dropdown text-end">
+                    <a href="/profile" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#6c757d" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                        </svg>
+                    </a>
+                    <ul class="dropdown-menu text-small bg-light">
+                        <li><a class="dropdown-item" href="/profile">Профиль</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item link-danger" href="/logout">Выйти</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="/login" class="btn btn-dark">
+                    Войти
+                </a>
+                {% endif %}
+            </div>
         </div>
-    </div>
-
+    </header>
+    {% block content %}
+    {% endblock content %}
 </body>
 
 </html>

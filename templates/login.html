@@ -10,8 +10,7 @@
     <title>{{ title }}</title>
 </head>
 
-<body>
-
+<body class="bg-light">
     <div class="container d-flex justify-content-center">
         <div class="login-container">
             <h1 class="login-title">Войти в аккаунт</h1>
@@ -36,7 +35,7 @@
                 {% endfor %}
                 </p>
                 <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-                <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+                <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
                 <p class="text-center">Нет учетной записи?<br><a href="/register"
                         style="text-decoration: none;">Зарегистрироваться</a></p>
                 <div>{{ message }}</div>

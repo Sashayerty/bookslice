@@ -37,10 +37,17 @@ def index():
 
 @app.route("/profile")
 def profile():
+    db_sess = models.db_session.create_session()
+    name = db_sess.query(models.user.User).get(current_user.id).name
+    email = db_sess.query(models.user.User).get(current_user.id).email
     return render_template(
         "profile.html",
         title="Профиль",
-    )  # noqa
+        name=name,
+        email=email,
+        id=current_user.id,
+        user_is_auth=current_user.is_authenticated,
+    )
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -112,17 +119,23 @@ def logout():
 
 @app.route("/catalog")
 def catalog():
-    return render_template("catalog.html", title="Каталог")
+    return render_template("catalog.html",
+                           title="Каталог",
+                           user_is_auth=current_user.is_authenticated,)
 
 
 @app.route("/catalog/<int:book_id>")
 def book_in_catalog(book_id: int):
-    return render_template("index.html", title="Информация о книге")
+    return render_template("index.html",
+                           title="Информация о книге",
+                           user_is_auth=current_user.is_authenticated,)
 
 
 @app.route("/read/<int:book_id>/<int:page>")
 def read_book_in_catalog(book_id: int, page: int):
-    return render_template("index.html", title="Читать книгу")
+    return render_template("index.html",
+                           title="Читать книгу",
+                           user_is_auth=current_user.is_authenticated,)
 
 
 def main():

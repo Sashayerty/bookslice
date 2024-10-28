@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 </head>
-<body>
+<body class="bg-light">
     <div class="container d-flex justify-content-center flex-column align-items-center" style="min-height: 100vh;">
         <h1 class="form-header">Зарегистрировать аккаунт</h1>
         <form action="" method="post" style="width: 30rem;">
@@ -45,7 +45,7 @@
                     </p>
                 {% endfor %}
             </p>
-            <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+            <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
             <p class="text-center">Уже есть аккаунт?<br><a href="/login" style="text-decoration: none;">Войти</a></p>
             {{message}}
         </form>

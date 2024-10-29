@@ -8,6 +8,7 @@ app.db
 
 # C extensions
 *.so
+denv
 
 # Distribution / packaging
 .Python

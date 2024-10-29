@@ -9,15 +9,18 @@ import forms
 import forms.chat
 import forms.login_form
 import forms.reg_form
+import functions.AI
 import models
 import models.authors
 import models.db_session
 import models.text_of_book
 import models.user
+import functions
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 app = Flask(__name__)
+ai = functions.AI.AI()
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
@@ -135,11 +138,23 @@ def logout():
 @app.route("/ask", methods=["GET", "POST"])
 def ask():
     form = forms.chat.ChatForm()
+    if form.validate_on_submit():
+        messages = ai.message(form.message.data)
+        messages = ai.get_messages()
+        return render_template(
+            "ask.html",
+            title="Спросить ИИ",
+            form=form,
+            user_is_auth=current_user.is_authenticated,
+            messages=messages,
+        )
+    messages = ai.get_messages()
     return render_template(
         "ask.html",
         title="Спросить ИИ",
         form=form,
         user_is_auth=current_user.is_authenticated,
+        messages=messages,
     )
 
 
@@ -173,9 +188,7 @@ def book_in_catalog(book_id: int):
 def read_book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
     text_of_book = (
-        db_sess.query(models.text_of_book.TextOfBook)
-        .get(book_id)
-        .text
+        db_sess.query(models.text_of_book.TextOfBook).get(book_id).text
     )
     return render_template(
         "read_book.html",

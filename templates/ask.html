@@ -1,0 +1,38 @@
+{% extends "base.html"%}
+{% block content %}
+<div class="container d-flex justify-content-center mt-5">
+  <div class="card" style="width: 100rem; min-height: 40rem;">
+    <div class="card-header d-flex justify-content-between" style="align-items: center;">
+      #Чатик с ИИ 
+    </div>
+    <div class="card-body">
+      {% for mess in messages %}
+          {% if mess["role"] == 'user' %}
+            <p class="text-end">
+              {{ current_user.name }}: {{ mess["text"] }}
+            </p>
+          {% elif  mess["role"] == "assistant" %}
+            <p class="text-start text-success-emphasis" style="max-width: 50rem;">
+              ИИ 🤖: {{ mess["text"].replace("`", "").replace("*", "") }}
+            </p>
+          {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="container mt-3" style="width: 30rel;">
+  <form class="d-flex justify-content-center" action="" method="post">
+    {{ form.hidden_tag() }}
+    {{ form.message(class="form-control focus-ring focus-ring-dark py-1 px-1 text-decoration-none border rounded-2", type="message", placeholder="Сообщение", id='message') }}<br>
+    <script>
+      document.getElementById("message").value="";
+    </script>
+              {% for error in form.message.errors %}
+                  <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                  </div>
+              {% endfor %}
+    {{ form.send(type="submit", class="btn btn-warning") }}
+  </form>
+</div>
+{% endblock content %}

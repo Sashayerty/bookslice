@@ -24,9 +24,11 @@
             <div class="email-box">
                 <p class="email">Почта: {{ email }}</p>
             </div>
+            {% if speed_of_reading %}
             <div class="speed-box">
                 <p class="speed">Скорость чтения: {{ speed_of_reading }} слов/мин</p>
             </div>
+            {% endif %}
         </div>
         
     </div>

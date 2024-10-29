@@ -10,7 +10,9 @@ import forms.chat
 import forms.login_form
 import forms.reg_form
 import models
+import models.authors
 import models.db_session
+import models.text_of_book
 import models.user
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -30,10 +32,10 @@ def load_user(user_id):
 @app.route("/")
 def index():
     return render_template(
-            "index.html",
-            title="Главная",
-            user_is_auth=current_user.is_authenticated,
-        )
+        "index.html",
+        title="Главная",
+        user_is_auth=current_user.is_authenticated,
+    )
 
 
 @app.route("/profile")
@@ -143,10 +145,13 @@ def ask():
 
 @app.route("/catalog")
 def catalog():
+    db_sess = models.db_session.create_session()
+    books = db_sess.query(models.books.Books).all()
     return render_template(
         "catalog.html",
         title="Каталог",
         user_is_auth=current_user.is_authenticated,
+        books=books,
     )
 
 
@@ -154,20 +159,29 @@ def catalog():
 def book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
     book = db_sess.query(models.books.Books).get(book_id)
+    author = db_sess.query(models.authors.Authors).get(book.author)
     return render_template(
         "about_book.html",
-        title="Информация о книге",
+        title=book.title,
         user_is_auth=current_user.is_authenticated,
-        book=book
+        book=book,
+        author=author,
     )
 
 
-@app.route("/read/<int:book_id>/<int:page>")
-def read_book_in_catalog(book_id: int, page: int):
+@app.route("/read/<int:book_id>")
+def read_book_in_catalog(book_id: int):
+    db_sess = models.db_session.create_session()
+    text_of_book = (
+        db_sess.query(models.text_of_book.TextOfBook)
+        .get(book_id)
+        .text
+    )
     return render_template(
-        "index.html",
+        "read_book.html",
         title="Читать книгу",
         user_is_auth=current_user.is_authenticated,
+        text_of_book=text_of_book,
     )
 
 

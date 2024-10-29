@@ -1,5 +1,3 @@
-import datetime
-
 import sqlalchemy
 
 from .db_session import SqlAlchemyBase
@@ -12,12 +10,9 @@ class Books(SqlAlchemyBase):
         sqlalchemy.Integer, primary_key=True, autoincrement=True
     )  # noqa
     title = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    description = sqlalchemy.Column(sqlalchemy.String, nullable=True)  # noqa
+    description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     author = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
-    hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    writed_in = sqlalchemy.Column(sqlalchemy.Date, nullable=False)
+    writed_in = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     count_of_words = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
-    speed_of_reading = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
-    created_date = sqlalchemy.Column(
-        sqlalchemy.DateTime, default=datetime.datetime.now, nullable=False
-    )  # noqa
+    original = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
+    genere = sqlalchemy.Column(sqlalchemy.String, nullable=False)

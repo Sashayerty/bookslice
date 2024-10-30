@@ -5,6 +5,7 @@ __pycache__/
 db
 *.db
 app.db
+ngrok.exe
 
 # C extensions
 *.so

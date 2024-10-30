@@ -2,28 +2,54 @@ import os
 
 import dotenv
 from flask import Flask, redirect, render_template
-from flask_login import (LoginManager, current_user, login_required,
-                         login_user, logout_user)
+from flask_admin import Admin, AdminIndexView
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 
+import admin_panel.admin_views
+import admin_panel.admin_views.authors
+import admin_panel.admin_views.books
+import admin_panel.admin_views.text_of_book
 import forms
 import forms.chat
 import forms.login_form
 import forms.reg_form
+import functions
 import functions.AI
 import models
 import models.authors
+import models.books
 import models.db_session
 import models.text_of_book
 import models.user
-import functions
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 app = Flask(__name__)
+admin = Admin(
+    app,
+    index_view=AdminIndexView(name="BookSlice-Admin", url="/admin"),
+    template_mode="bootstrap4",
+)
 ai = functions.AI.AI()
+models.db_session.global_init("db/app.db")
+db_sess = models.db_session.create_session()
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
+
+admin.add_views(
+    admin_panel.admin_views.books.Books(models.books.Books, db_sess),
+    admin_panel.admin_views.authors.Authors(models.authors.Authors, db_sess),
+    admin_panel.admin_views.text_of_book.TextOfBook(
+        models.text_of_book.TextOfBook, db_sess
+    ),
+)
 
 
 @login_manager.user_loader
@@ -203,5 +229,4 @@ def main():
 
 
 if __name__ == "__main__":
-    models.db_session.global_init("db/app.db")
     main()

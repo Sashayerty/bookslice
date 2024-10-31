@@ -13,7 +13,7 @@
 <body class="bg-light">
     <div class="login container d-grid align-items-center justify-content-center">
         <div class="login-container shadow-lg border border-2 rounded-4 p-5">
-            <h1 class="login-title fs-2 fw-bold text-body mb-5">Войти в аккаунт</h1>
+            <h1 class="login-title fs-2 fw-bold text-body mb-5">BookSlice Admin</h1>
             <form action="" method="post">
                 {{ form.hidden_tag() }}
                 <p>
@@ -36,8 +36,6 @@
                 </p>
                 <p class="mb-4">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
                 <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-secondary shadow-lg") }}</p>
-                <p class="text-center">Нет учетной записи?<br><a href="/register"
-                        style="text-decoration: none;">Зарегистрироваться</a></p>
                 <div>{{ message }}</div>
             </form>
         </div>

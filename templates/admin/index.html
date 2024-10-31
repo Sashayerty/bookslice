@@ -1,0 +1,20 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+  <div class="container">
+    <div class="container text-center">
+      <p class="text-info" style="font-size: xx-large; margin-top: 30px;">Добро пожаловать в BookSlice Admin!</p>
+    </div>
+    <div class="container">
+      <p style="font-size: large; margin-top: 30px;">Здесь Вы можете менять следующие модели:</p>
+      <ul style="font-size: large; text-decoration: none;">
+        <li><a class="text-info" style="margin-top: 15px;" href="/admin/books">Книги</a>, которые высвечиваются в каталоге.</li>
+        <li><a class="text-info" style="margin-top: 15px;" href="/admin/authors">Авторы</a> книг</li>
+        <li><a class="text-info" style="margin-top: 15px;" href="/admin/textofbook">Тексты</a> книг</li>
+        <li><a class="text-info" style="margin-top: 15px;" href="/admin/user">Пользователи</a></li>
+        <li><a class="text-info" style="margin-top: 15px;" href="/admin/staticfiles">Статические файлы</a> проекта</li>
+      </ul>
+      <p style="font-size: xx-large;">Сам <a class="text-info" href="/">cайт</a></p>
+    </div>
+  </div>
+{% endblock %}

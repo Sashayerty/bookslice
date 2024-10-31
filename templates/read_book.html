@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="container fs-4">
+        <p class="text-center fs-1 fw-semibold my-4">{{ author }}</p>
+        <p class="text-center fs-2 fw-semibold my-4">{{ book.title }}</p>
         {{ text_of_book }}
     </div>
 {% endblock content %}

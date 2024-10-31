@@ -15,4 +15,4 @@ class Books(SqlAlchemyBase):
     writed_in = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     count_of_words = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     original = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
-    genere = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    genere = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)

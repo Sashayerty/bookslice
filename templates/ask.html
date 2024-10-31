@@ -27,12 +27,12 @@
     <script>
       document.getElementById("message").value="";
     </script>
-              {% for error in form.message.errors %}
-                  <div class="alert alert-danger" role="alert">
-                      {{ error }}
-                  </div>
-              {% endfor %}
-    {{ form.send(type="submit", class="btn btn-warning") }}
+    {% for error in form.message.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endfor %}
+    {{ form.send(type="submit", class="btn btn-secondary shadow-lg") }}
   </form>
 </div>
 {% endblock content %}

@@ -1,7 +1,7 @@
 import requests
 from dotenv import dotenv_values
 
-key = dotenv_values("./.env")["key"]
+key = dotenv_values("./.env")["YANDEX_KEY"]
 
 
 class AI:

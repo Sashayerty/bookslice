@@ -10,8 +10,8 @@
 </head>
 <body class="bg-light">
     <div class="login container d-grid align-items-center justify-content-center">
-        <div class="login-container shadow-lg p-5">
-            <h1 class="register-title fs-2">Зарегистрировать аккаунт</h1>
+        <div class="login-container shadow-lg border border-2 rounded-4 p-5">
+            <h1 class="login-title fs-2 fw-bold text-body mb-5">Зарегистрировать аккаунт</h1>
         <form action="" method="post">
             {{ form.hidden_tag() }}
             <p>
@@ -46,7 +46,7 @@
                     </p>
                 {% endfor %}
             </p>
-            <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
+            <p class="d-grid gap-2">{{ form.submit(type="submit", class="btn btn-secondary shadow-lg") }}</p>
             <p class="text-center">Уже есть аккаунт?<br><a href="/login" style="text-decoration: none;">Войти</a></p>
             {{message}}
         </form>

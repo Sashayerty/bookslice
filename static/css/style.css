@@ -87,12 +87,19 @@ body {
   border: 2px solid #6c757d;
 }
 
-.book {
-  border: 3px solid #6c757d;
-  border-radius: 20px;
-}
-
 .book-con {
   border-radius: 20px;
   border: 2px solid #6c757d;
+}
+
+.unauth {
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: xx-large;
+}
+
+.login-link {
+  color: #fd7e14;
 }

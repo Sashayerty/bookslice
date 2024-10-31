@@ -1,0 +1,18 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+  <div class="container">
+    <div class="container text-center">
+      <p style="font-size: xx-large; margin-top: 30px;">Добро пожаловать в админ-панель!</p>
+    </div>
+    <div class="container">
+      <p style="font-size: large; margin-top: 30px;">Здесь Вы можете менять следующие модели:</p>
+      <ul style="font-size: large; text-decoration: none;">
+        <li><a class="btn btn-primary" style="margin-top: 15px;" href="/admin/books">Книги</a> Книги, которые высвечиваются в каталоге.</li>
+        <li><a class="btn btn-primary" style="margin-top: 15px;" href="/admin/authors">Авторы</a> Авторы книг</li>
+        <li><a class="btn btn-primary" style="margin-top: 15px;" href="/admin/textofbook">Тексты книг</a> Тексты книг</li>
+      </ul>
+      <p style="font-size: xx-large;">Сам сайт: <a class="btn btn-primary" href="/">Сайт</a></p>
+    </div>
+  </div>
+{% endblock %}

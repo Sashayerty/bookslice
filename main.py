@@ -1,7 +1,7 @@
 import os
 
 import dotenv
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, url_for
 from flask_admin import Admin, AdminIndexView
 from flask_login import (
     LoginManager,
@@ -34,7 +34,7 @@ app = Flask(__name__)
 admin = Admin(
     app,
     index_view=AdminIndexView(name="BookSlice-Admin", url="/admin"),
-    template_mode="bootstrap4",
+    template_mode="bootstrap3",
 )
 ai = functions.AI.AI()
 models.db_session.global_init("db/app.db")
@@ -42,6 +42,8 @@ db_sess = models.db_session.create_session()
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
+app.config["FLASK_ADMIN_SWATCH"] = "Spacelab"
+login_manager.login_view = "unauthorized"
 
 admin.add_views(
     admin_panel.admin_views.books.Books(models.books.Books, db_sess),
@@ -58,6 +60,17 @@ def load_user(user_id):
     return db_sess.query(models.user.User).get(user_id)
 
 
+@app.route("/unauthorized")
+def unauthorized():
+    return render_template("unauth.html"), 401
+
+
+# Обработчик ошибки 401
+@app.errorhandler(401)
+def custom_401(error):
+    return redirect(url_for("unauthorized"))
+
+
 @app.route("/")
 def index():
     return render_template(
@@ -68,6 +81,7 @@ def index():
 
 
 @app.route("/profile")
+@login_required
 def profile():
     db_sess = models.db_session.create_session()
     name = db_sess.query(models.user.User).get(current_user.id).name
@@ -86,12 +100,25 @@ def profile():
     )
 
 
+@app.route("/summarize", methods=["POST", "GET"])
+@login_required
+def summarize():
+    return render_template("summarize.html")
+
+
+@app.route("/summarize/<int:book_id>", methods=["POST", "GET"])
+@login_required
+def summarize_by_id(book_id):
+    return render_template("summarize.html")
+
+
 @app.route("/check-speed-of-reading")
+@login_required
 def check_speed_of_reading():
-    db_sess = models.db_session.create_session()
-    db_sess.query(models.user.User).get(current_user.id).speed_of_reading = 120
-    db_sess.commit()
-    return redirect("/profile")
+    return render_template(
+        "check_speed_of_reading.html",
+        user_is_auth=current_user.is_authenticated,
+    )
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -162,6 +189,7 @@ def logout():
 
 
 @app.route("/ask", methods=["GET", "POST"])
+@login_required
 def ask():
     form = forms.chat.ChatForm()
     if form.validate_on_submit():
@@ -185,6 +213,7 @@ def ask():
 
 
 @app.route("/catalog")
+@login_required
 def catalog():
     db_sess = models.db_session.create_session()
     books = db_sess.query(models.books.Books).all()
@@ -197,6 +226,7 @@ def catalog():
 
 
 @app.route("/catalog/<int:book_id>")
+@login_required
 def book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
     book = db_sess.query(models.books.Books).get(book_id)
@@ -211,6 +241,7 @@ def book_in_catalog(book_id: int):
 
 
 @app.route("/read/<int:book_id>")
+@login_required
 def read_book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
     text_of_book = (

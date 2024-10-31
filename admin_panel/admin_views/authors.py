@@ -7,3 +7,5 @@ class Authors(ModelView):
     can_delete = True
     can_view_details = True
     column_list = ("id", "name")
+    column_filters = ("name",)
+    column_labels = {"id": "ID", "name": "ФИО"}

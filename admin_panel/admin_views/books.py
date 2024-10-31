@@ -6,6 +6,8 @@ class Books(BaseView):
     column_filters = ("title", "genere", "original")
     column_labels = {
         "id": "ID",
+        "description": "Описание",
+        "count_of_words": "Количество слов",
         "title": "Название книги",
         "author": "Автор",
         "writed_in": "Год издания",

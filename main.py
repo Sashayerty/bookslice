@@ -103,7 +103,8 @@ def profile():
 @app.route("/summarize", methods=["POST", "GET"])
 @login_required
 def summarize():
-    return render_template("summarize.html")
+    return render_template("summarize.html",
+                           user_is_auth=current_user.is_authenticated,)
 
 
 @app.route("/summarize/<int:book_id>", methods=["POST", "GET"])

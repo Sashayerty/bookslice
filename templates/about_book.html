@@ -6,7 +6,7 @@
           <li class="breadcrumb-item"><a class="nav-link" href="/catalog">Каталог</a></li>
           <li class="breadcrumb-item" aria-current="page">{{ book.title }}</li>
         </ol>
-      </nav>
+    </nav>
 </div>
 <div class="about container mt-5">
     <div class="book-con row shadow border border-2 rounded-2 p-5">
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="col-xs col-sm col-md col-lg-9 col-xl-9 col-xxl-9 d-grid align-items-center">
-            <p class="fs-2 fw-medium">{{ book.title }} <span class="badge text-bg-secondary border border-1 shadow fs-5 fw-light">{{ book.genere }}</span></p>
+            <p class="fs-2 fw-medium">{{ book.title }} <span class="badge text-bg-secondary border border-1 shadow fs-5 fw-light">{{ genere.name if genere.name else "Нет жанра" }}</span></p>
             <p class="fs-3">Автор: {{ author.name }}</p>
             <p class="fs-3">Год издания: {{ book.writed_in }}</p>
             {% if book.description %}

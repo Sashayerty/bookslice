@@ -12,6 +12,7 @@ import admin_panel
 import admin_panel.admin_views
 import admin_panel.admin_views.authors
 import admin_panel.admin_views.books
+import admin_panel.admin_views.generes
 import admin_panel.admin_views.static_files
 import admin_panel.admin_views.text_of_book
 import admin_panel.admin_views.users
@@ -24,6 +25,7 @@ import functions
 import functions.AI
 import models
 import models.db_session
+import models.generes
 import models.user
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -41,7 +43,7 @@ db_sess = models.db_session.create_session()
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
-app.config["FLASK_ADMIN_SWATCH"] = "Spacelab"
+app.config["FLASK_ADMIN_SWATCH"] = "Cerulean"
 login_manager.login_view = "unauthorized"
 path = op.join(op.dirname(__file__), "static")
 babel = Babel(app, locale_selector=admin_panel.localization.get_locale)
@@ -52,6 +54,9 @@ admin.add_views(
     ),
     admin_panel.admin_views.authors.Authors(
         models.authors.Authors, db_sess, name="Авторы"
+    ),
+    admin_panel.admin_views.generes.Generes(
+        models.generes.Generes, db_sess, name="Жанры"
     ),
     admin_panel.admin_views.text_of_book.TextOfBook(
         models.text_of_book.TextOfBook, db_sess, name="Тексты книг"
@@ -75,7 +80,18 @@ def load_user(user_id):
 
 @app.route("/unauthorized")
 def unauthorized():
-    return render_template("unauth.html"), 401
+    return render_template("unauth.html", title="Войдите в аккаунт"), 401
+
+
+@app.route("/not-found")
+def not_found():
+    return render_template("404.html", title="404 Not Found"), 404
+
+
+# Обработчик ошибки 401
+@app.errorhandler(404)
+def custom_404(error):
+    return redirect(url_for("not_found"))
 
 
 # Обработчик ошибки 401
@@ -122,6 +138,7 @@ def summarize():
         "summarize.html",
         user_is_auth=current_user.is_authenticated,
         admin=current_user.admin if current_user.is_authenticated else False,
+        title="Сжать книгу",
     )
 
 
@@ -216,17 +233,17 @@ def admin_login():
             return redirect("/admin")
         elif user and not user.admin:
             return render_template(
-                "admin_login.html",
+                "admin/admin_login.html",
                 message="У Вас нет доступа к админ-панели!",
                 form=form,
             )
         return render_template(
-            "admin_login.html",
+            "admin/admin_login.html",
             message="Неправильный логин или пароль",
             form=form,
         )
     return render_template(
-        "admin_login.html", title="BookSlice Admin", form=form
+        "admin/admin_login.html", title="BookSlice Admin", form=form
     )
 
 
@@ -285,6 +302,7 @@ def book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
     book = db_sess.query(models.books.Books).get(book_id)
     author = db_sess.query(models.authors.Authors).get(book.author)
+    genere = db_sess.query(models.generes.Generes).get(book.genere)
     return render_template(
         "about_book.html",
         title=book.title,
@@ -292,6 +310,7 @@ def book_in_catalog(book_id: int):
         admin=current_user.admin if current_user.is_authenticated else False,
         book=book,
         author=author,
+        genere=genere,
     )
 
 
@@ -299,15 +318,19 @@ def book_in_catalog(book_id: int):
 @login_required
 def read_book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
+    book = db_sess.query(models.books.Books).get(book_id)
     text_of_book = (
         db_sess.query(models.text_of_book.TextOfBook).get(book_id).text
     )
+    author = db_sess.query(models.authors.Authors).get(book.author).name
     return render_template(
         "read_book.html",
         title="Читать книгу",
         user_is_auth=current_user.is_authenticated,
         admin=current_user.admin if current_user.is_authenticated else False,
         text_of_book=text_of_book,
+        book=book,
+        author=author,
     )
 
 

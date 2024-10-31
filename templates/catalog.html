@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container text-center">
+    {% if books %}
     {% for i in books %}
     <div class="row fs-3">
         <div class="book col m-3 p-3 shadow-lg border  rounded-4">
@@ -14,5 +15,8 @@
         </div>
     </div>
     {% endfor %}
+    {% else %}
+    <p class="fs-1 fw-bold my-5">Каталог пустой!</p>
+    {% endif %}
 </div>
 {% endblock content %}

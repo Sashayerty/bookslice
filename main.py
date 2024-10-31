@@ -1,20 +1,21 @@
 import os
+import os.path as op
 
 import dotenv
 from flask import Flask, redirect, render_template, url_for
 from flask_admin import Admin, AdminIndexView
-from flask_login import (
-    LoginManager,
-    current_user,
-    login_required,
-    login_user,
-    logout_user,
-)
+from flask_babel import Babel
+from flask_login import (LoginManager, current_user, login_required,
+                         login_user, logout_user)
 
+import admin_panel
 import admin_panel.admin_views
 import admin_panel.admin_views.authors
 import admin_panel.admin_views.books
+import admin_panel.admin_views.static_files
 import admin_panel.admin_views.text_of_book
+import admin_panel.admin_views.users
+import admin_panel.localization
 import forms
 import forms.chat
 import forms.login_form
@@ -22,10 +23,7 @@ import forms.reg_form
 import functions
 import functions.AI
 import models
-import models.authors
-import models.books
 import models.db_session
-import models.text_of_book
 import models.user
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -33,7 +31,8 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 app = Flask(__name__)
 admin = Admin(
     app,
-    index_view=AdminIndexView(name="BookSlice-Admin", url="/admin"),
+    name="BookSlice Admin",
+    index_view=AdminIndexView(name="BookSlice Admin", url="/admin"),
     template_mode="bootstrap3",
 )
 ai = functions.AI.AI()
@@ -44,13 +43,27 @@ login_manager.init_app(app)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 app.config["FLASK_ADMIN_SWATCH"] = "Spacelab"
 login_manager.login_view = "unauthorized"
+path = op.join(op.dirname(__file__), "static")
+babel = Babel(app, locale_selector=admin_panel.localization.get_locale)
 
 admin.add_views(
-    admin_panel.admin_views.books.Books(models.books.Books, db_sess),
-    admin_panel.admin_views.authors.Authors(models.authors.Authors, db_sess),
-    admin_panel.admin_views.text_of_book.TextOfBook(
-        models.text_of_book.TextOfBook, db_sess
+    admin_panel.admin_views.books.Books(
+        models.books.Books, db_sess, name="Книги"
     ),
+    admin_panel.admin_views.authors.Authors(
+        models.authors.Authors, db_sess, name="Авторы"
+    ),
+    admin_panel.admin_views.text_of_book.TextOfBook(
+        models.text_of_book.TextOfBook, db_sess, name="Тексты книг"
+    ),
+    admin_panel.admin_views.users.UsersView(
+        models.user.User, db_sess, name="Пользователи"
+    ),
+)
+admin.add_view(
+    admin_panel.admin_views.static_files.StaticFiles(
+        path, "/static/", name="Статические Файлы"
+    )
 )
 
 
@@ -77,6 +90,7 @@ def index():
         "index.html",
         title="Главная",
         user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
     )
 
 
@@ -97,14 +111,18 @@ def profile():
         id=current_user.id,
         user_is_auth=current_user.is_authenticated,
         speed_of_reading=speed_of_reading,
+        admin=current_user.admin if current_user.is_authenticated else False,
     )
 
 
 @app.route("/summarize", methods=["POST", "GET"])
 @login_required
 def summarize():
-    return render_template("summarize.html",
-                           user_is_auth=current_user.is_authenticated,)
+    return render_template(
+        "summarize.html",
+        user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
+    )
 
 
 @app.route("/summarize/<int:book_id>", methods=["POST", "GET"])
@@ -119,6 +137,7 @@ def check_speed_of_reading():
     return render_template(
         "check_speed_of_reading.html",
         user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
     )
 
 
@@ -182,6 +201,35 @@ def login():
     return render_template("login.html", title="Вход", form=form)
 
 
+@app.route("/admin-login", methods=["POST", "GET"])
+def admin_login():
+    form = forms.login_form.LoginForm()
+    if form.validate_on_submit():
+        db_sess = models.db_session.create_session()
+        user = (
+            db_sess.query(models.user.User)
+            .filter(models.user.User.email == form.email.data)
+            .first()
+        )
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/admin")
+        elif user and not user.admin:
+            return render_template(
+                "admin_login.html",
+                message="У Вас нет доступа к админ-панели!",
+                form=form,
+            )
+        return render_template(
+            "admin_login.html",
+            message="Неправильный логин или пароль",
+            form=form,
+        )
+    return render_template(
+        "admin_login.html", title="BookSlice Admin", form=form
+    )
+
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -201,6 +249,9 @@ def ask():
             title="Спросить ИИ",
             form=form,
             user_is_auth=current_user.is_authenticated,
+            admin=(
+                current_user.admin if current_user.is_authenticated else False
+            ),
             messages=messages,
         )
     messages = ai.get_messages()
@@ -209,6 +260,7 @@ def ask():
         title="Спросить ИИ",
         form=form,
         user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
         messages=messages,
     )
 
@@ -222,6 +274,7 @@ def catalog():
         "catalog.html",
         title="Каталог",
         user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
         books=books,
     )
 
@@ -236,6 +289,7 @@ def book_in_catalog(book_id: int):
         "about_book.html",
         title=book.title,
         user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
         book=book,
         author=author,
     )
@@ -252,6 +306,7 @@ def read_book_in_catalog(book_id: int):
         "read_book.html",
         title="Читать книгу",
         user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
         text_of_book=text_of_book,
     )
 

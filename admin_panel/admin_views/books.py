@@ -1,11 +1,7 @@
-from flask_admin.contrib.sqla import ModelView
+from .base_view import BaseView
 
 
-class Books(ModelView):
-    can_create = True
-    can_edit = True
-    can_delete = True
-    can_view_details = True
+class Books(BaseView):
     column_list = ("id", "title", "author", "writed_in", "original", "genere")
     column_filters = ("title", "genere", "original")
     column_labels = {
@@ -16,3 +12,11 @@ class Books(ModelView):
         "original": "Оригинальность",
         "genere": "Жанр",
     }
+    column_editable_list = (
+        "title",
+        "author",
+        "writed_in",
+        "genere",
+        "original",
+    )
+    column_searchable_list = ("title", "author")

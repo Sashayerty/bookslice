@@ -24,6 +24,7 @@ import forms.reg_form
 import functions
 import functions.AI
 import models
+import models.books
 import models.db_session
 import models.generes
 import models.user
@@ -43,7 +44,7 @@ db_sess = models.db_session.create_session()
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
-app.config["FLASK_ADMIN_SWATCH"] = "Cerulean"
+# app.config["FLASK_ADMIN_SWATCH"] = "Cosmo"
 login_manager.login_view = "unauthorized"
 path = op.join(op.dirname(__file__), "static")
 babel = Babel(app, locale_selector=admin_panel.localization.get_locale)
@@ -153,9 +154,33 @@ def summarize_by_id(book_id):
 def check_speed_of_reading():
     return render_template(
         "check_speed_of_reading.html",
+        title="Проверить скорость чтения",
         user_is_auth=current_user.is_authenticated,
         admin=current_user.admin if current_user.is_authenticated else False,
     )
+
+
+@app.route("/test/<int:book_id>")
+def test_by_book(book_id: int):
+    book = db_sess.query(models.books.Books).get(book_id)
+    if book:
+        return render_template(
+            "test_by_book.html",
+            title="Тест",
+            user_is_auth=current_user.is_authenticated,
+            admin=(
+                current_user.admin if current_user.is_authenticated else False
+            ),
+            book=book,
+        )
+    else:
+        return (
+            render_template(
+                "404.html",
+                title="404 Not Found",
+            ),
+            404,
+        )
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -301,17 +326,28 @@ def catalog():
 def book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
     book = db_sess.query(models.books.Books).get(book_id)
-    author = db_sess.query(models.authors.Authors).get(book.author)
-    genere = db_sess.query(models.generes.Generes).get(book.genere)
-    return render_template(
-        "about_book.html",
-        title=book.title,
-        user_is_auth=current_user.is_authenticated,
-        admin=current_user.admin if current_user.is_authenticated else False,
-        book=book,
-        author=author,
-        genere=genere,
-    )
+    if book:
+        author = db_sess.query(models.authors.Authors).get(book.author)
+        genere = db_sess.query(models.generes.Generes).get(book.genere)
+        return render_template(
+            "about_book.html",
+            title=book.title,
+            user_is_auth=current_user.is_authenticated,
+            admin=(
+                current_user.admin if current_user.is_authenticated else False
+            ),
+            book=book,
+            author=author,
+            genere=genere,
+        )
+    else:
+        return (
+            render_template(
+                "404.html",
+                title="404 Not Found",
+            ),
+            404,
+        )
 
 
 @app.route("/read/<int:book_id>")
@@ -325,7 +361,7 @@ def read_book_in_catalog(book_id: int):
     author = db_sess.query(models.authors.Authors).get(book.author).name
     return render_template(
         "read_book.html",
-        title="Читать книгу",
+        title=book.title,
         user_is_auth=current_user.is_authenticated,
         admin=current_user.admin if current_user.is_authenticated else False,
         text_of_book=text_of_book,

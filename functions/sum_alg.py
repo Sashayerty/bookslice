@@ -1,5 +1,4 @@
 import networkx as nx
-import nltk
 from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 

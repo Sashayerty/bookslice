@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <link rel="icon" type="image/png" href="../static/img/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="../static/img/favicon.svg" />
+    <link rel="shortcut icon" href="../static/img/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/img/apple-touch-icon.png" />
+    <link rel="manifest" href="../static/img/site.webmanifest" />
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="../static/js/bootstrap.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+
+<body class="bg-light">
+    <header class="p-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="highlighted-text d-flex align-items-center fs-4 mb-2 me-lg-5 mb-lg-0 link-body-emphasis text-decoration-none">
+                    BookSlice
+                </a>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/catalog" class="nav-link px-3 link-body-emphasis">Каталог</a></li>
+                    <li><a href="/summarize" class="nav-link px-3 link-body-emphasis">Сжать книгу</a></li>
+                    <li><a href="/ask" class="nav-link px-3 link-body-emphasis">Спросить ИИ</a></li>
+                    {% if admin %}
+                    <li><a href="/admin" class="nav-link px-3 link-body-emphasis text-decoration-underline">Админ-панель</a></li>
+                    {% endif %}
+                    <li><a href="https://github.com/Sashayerty/AI_olimp_2024/tree/main" class="github nav-link px-3 link-body-emphasis">GitHub проекта</a></li>
+                </ul>
+
+                {% if user_is_auth %}
+                <div class="dropdown text-end">
+                    <a href="/profile" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#6c757d" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                        </svg>
+                    </a>
+                    <ul class="dropdown-menu text-small bg-light">
+                        <li><a class="dropdown-item" href="/profile">Профиль</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="logout-link dropdown-item" href="/logout">Выйти</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="/login" class="btn btn-secondary shadow-lg me-2">
+                    Войти
+                </a>
+                <a href="/admin-login" class="btn btn-secondary shadow-lg">
+                    Войти в админ-панель
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    {% block content %}
+    {% endblock content %}
+</body>
+
+</html>

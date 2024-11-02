@@ -1,6 +1,7 @@
 # AI_olimp_2024
 
-[![Linting](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/python-package.yml)  
+[![Black](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/black.yml/badge.svg?branch=main&event=push)](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/black.yml)
+[![Flake8](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/flake8.yml/badge.svg?branch=main&event=push)](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/flake8.yml)  
 ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
 ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)

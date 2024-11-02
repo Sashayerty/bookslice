@@ -23,8 +23,9 @@
 ```bash
 AI_OLIMP_2024/
 ├── .github/
-│   └── workflolws/
-│       └── python-package.yml          # CI/CD проекта
+│   └── workflolws/                     # CI/CD проекта
+│       │── black.yml                   # Проверка по black
+│       └── flake8.yml                  # Проверка по flake8
 ├── admin/                              # Отображение моделей в админке
 │   └── localization/                   # Локализация админки
 ├── db/                                 # База данных проекта

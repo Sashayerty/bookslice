@@ -1,5 +1,10 @@
 # AI_olimp_2024
 
+[![Linting](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/python-package.yml)  
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+
 ## Содержание
 
 - [Список папок и файлов](#список-папок-и-файлов)
@@ -7,6 +12,7 @@
 - [Как запустить проект](#как-запустить-проект)
 - [Flask-admin, или как сделать выбор в сторону flask, а не django](#flask-admin-или-как-сделать-выбор-в-сторону-flask-а-не-django)
 - [Данные для входа в админку](#данные-для-входа-в-админку)
+- [Функция сильного/слабого сжатия текста пользователя/из бд](#функция-сильногослабого-сжатия-текста-пользователяиз-бд)
 
 Перед запуском проекта, стоит позабодится о том, чтобы у Вас был API ключ от YandexConsole.  
 Существует много инструкций на просторах Интернета, как это сделать. [Ссылка](https://console.yandex.cloud/) на YandexConsole.
@@ -15,17 +21,16 @@
 
 ```bash
 AI_OLIMP_2024/
-├── admin_panel/                        # Логика админ-панели
-│   ├── admin_views/                    # Отображение моделей в админке
-│   └── localization.py                 # Локализация админки
+├── .github/
+│   └── workflolws/
+│       └── python-package.yml          # CI/CD проекта
+├── admin/                              # Отображение моделей в админке
+│   └── localization/                   # Локализация админки
 ├── db/                                 # База данных проекта
-│   └── app.db                          # Основной файл базы данных                      
-├── forms/                              # Формы для приложения
-│   ├── chat.py                         # Форма чата
-│   ├── login_form.py                   # Форма авторизации
-│   └── reg_form.py                     # Форма регистрации
+│   └── app.db                          # Основной файл базы данных                                                   
 ├── functions/                          # Основные функции проекта
-│   └── AI.py                           # Функция, для работы с ИИ по адресу /ask (API)
+│   │── AI.py                           # Функция, для работы с ИИ по адресу /ask (API)
+│   └── sum_alg.py                      # Функция, для сильного/слабого сжатия текста
 ├── models/                             # Модели базы данных
 ├── requirements/                       # Зависимости проекта
 │   ├── dev.txt                         # Зависимости для разработки
@@ -33,23 +38,11 @@ AI_OLIMP_2024/
 ├── static/                             # Статические файлы
 │   ├── css/                            # CSS файлы стилей
 │   ├── fonts/                          # Шрифты
+│   ├── forms/                          # Формы для приложения
 │   ├── img/                            # Изображения и иконки
 │   └── js/                             # JavaScript файлы
 ├── templates/                          # HTML шаблоны
-│   │── admin/                          # Шаблоны админ-панели
-│   ├── 404.html                        # Страница ошибки 404
-│   ├── about_book.html                 # Страница информации о книге
-│   ├── ask.html                        # Страница чата с ИИ
-│   ├── base.html                       # Базовый шаблон
-│   ├── catalog.html                    # Каталог книг
-│   ├── check_speed_of_reading.html     # Страница проверки скорости чтения
-│   ├── index.html                      # Главная страница
-│   ├── login.html                      # Страница авторизации
-│   ├── profile.html                    # Профиль пользователя
-│   ├── read_book.html                  # Страница чтения книги
-│   ├── register.html                   # Страница регистрации
-│   ├── summarize.html                  # Страница с сжатием книги
-│   └── unauth.html                     # Страница ошибки 401
+│   └── admin/                          # Шаблоны админ-панели
 ├── .env                                # Ключи и параметры приложения, его НАДО СОЗДАТЬ
 ├── .flake8                             # Настройки для flake8
 ├── .gitignore                          # Файлы, которые игнорит git
@@ -187,3 +180,9 @@ WTForms==2.3.3
 email:      admin@admin
 password:   adminadmin
 ```
+
+## Функция сильного/слабого сжатия текста пользователя/из бд
+
+Сама функция состоит по-сути из 3 функций (***2***) и лежит в `AI_OLIMP_2024/functions/sum_alg.py`.  
+Функционал у нее простой (***пока что***). Документация для каждой из функций написана по всем стандартам.  
+Подробнее можете ознакомится [тут](functions/sum_alg.py).

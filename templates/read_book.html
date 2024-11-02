@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="container fs-4">
-        <p class="text-center fs-1 fw-semibold my-4">{{ author }}</p>
-        <p class="text-center fs-2 fw-semibold my-4">{{ book.title }}</p>
+        {% if author %}
+            <p class="text-center fs-1 fw-semibold my-4">{{ author }}</p>
+        {% endif %}
+        {% if book %}
+            <p class="text-center fs-2 fw-semibold my-4">{{ book.title }}</p>
+        {% endif %}
+        {% if summ_text %}
+            <p class="text-center fs-2 fw-semibold my-4">{{ summ_text }}</p>
+        {% endif %}
         {{ text_of_book }}
     </div>
 {% endblock content %}

@@ -8,31 +8,34 @@ from flask_babel import Babel
 from flask_login import (LoginManager, current_user, login_required,
                          login_user, logout_user)
 
-import admin_panel
-import admin_panel.admin_views
-import admin_panel.admin_views.authors
-import admin_panel.admin_views.books
-import admin_panel.admin_views.generes
-import admin_panel.admin_views.static_files
-import admin_panel.admin_views.text_of_book
-import admin_panel.admin_views.users
-import admin_panel.localization
-import forms
-import forms.chat
-import forms.login_form
-import forms.reg_form
+import admin
+import admin.authors_view
+import admin.books_view
+import admin.generes_view
+import admin.localozation.localization
+import admin.static_files_view
+import admin.text_of_book_view
+import admin.users_view
 import functions
 import functions.AI
+import functions.sum_alg
 import models
 import models.books
 import models.db_session
 import models.generes
+import models.text_of_book
 import models.user
+import static.forms
+import static.forms.chat
+import static.forms.login_form
+import static.forms.reg_form
+import static.forms.summ_by_id_form
+import static.forms.summ_form
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 app = Flask(__name__)
-admin = Admin(
+adminka = Admin(
     app,
     name="BookSlice Admin",
     index_view=AdminIndexView(name="BookSlice Admin", url="/admin"),
@@ -43,31 +46,25 @@ models.db_session.global_init("db/app.db")
 db_sess = models.db_session.create_session()
 login_manager = LoginManager()
 login_manager.init_app(app)
-app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
-# app.config["FLASK_ADMIN_SWATCH"] = "Cosmo"
 login_manager.login_view = "unauthorized"
 path = op.join(op.dirname(__file__), "static")
-babel = Babel(app, locale_selector=admin_panel.localization.get_locale)
+babel = Babel(app, locale_selector=admin.localozation.localization.get_locale)
 
-admin.add_views(
-    admin_panel.admin_views.books.Books(
-        models.books.Books, db_sess, name="Книги"
-    ),
-    admin_panel.admin_views.authors.Authors(
-        models.authors.Authors, db_sess, name="Авторы"
-    ),
-    admin_panel.admin_views.generes.Generes(
-        models.generes.Generes, db_sess, name="Жанры"
-    ),
-    admin_panel.admin_views.text_of_book.TextOfBook(
+app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
+app.config["ALLOWED_EXTENSIONS"] = ["txt"]
+# app.config["FLASK_ADMIN_SWATCH"] = "Cosmo"
+
+adminka.add_views(
+    admin.books_view.Books(models.books.Books, db_sess, name="Книги"),
+    admin.authors_view.Authors(models.authors.Authors, db_sess, name="Авторы"),
+    admin.generes_view.Generes(models.generes.Generes, db_sess, name="Жанры"),
+    admin.text_of_book_view.TextOfBook(
         models.text_of_book.TextOfBook, db_sess, name="Тексты книг"
     ),
-    admin_panel.admin_views.users.UsersView(
-        models.user.User, db_sess, name="Пользователи"
-    ),
+    admin.users_view.UsersView(models.user.User, db_sess, name="Пользователи"),
 )
-admin.add_view(
-    admin_panel.admin_views.static_files.StaticFiles(
+adminka.add_view(
+    admin.static_files_view.StaticFiles(
         path, "/static/", name="Статические Файлы"
     )
 )
@@ -135,18 +132,116 @@ def profile():
 @app.route("/summarize", methods=["POST", "GET"])
 @login_required
 def summarize():
+    form = static.forms.summ_form.SummForm()
+    if form.is_submitted():
+        if form.type_of_sum.data == "Сильное сжатие":
+            text = functions.sum_alg.summarize_text(
+                form.text.data[:1000000], "strong"
+            )
+            return render_template(
+                "read_book.html",
+                title="Сжатая книга",
+                text_of_book=text,
+                summ_text="Сжатый текст",
+                user_is_auth=current_user.is_authenticated,
+                admin=(
+                    current_user.admin
+                    if current_user.is_authenticated
+                    else False
+                ),
+            )
+        else:
+            text = functions.sum_alg.summarize_text(
+                form.text.data[:1000000], "weak"
+            )
+            return render_template(
+                "read_book.html",
+                title="Сжатая книга",
+                text_of_book=text,
+                summ_text="Сжатый текст",
+                user_is_auth=current_user.is_authenticated,
+                admin=(
+                    current_user.admin
+                    if current_user.is_authenticated
+                    else False
+                ),
+            )
     return render_template(
         "summarize.html",
         user_is_auth=current_user.is_authenticated,
         admin=current_user.admin if current_user.is_authenticated else False,
         title="Сжать книгу",
+        form=form,
     )
 
 
 @app.route("/summarize/<int:book_id>", methods=["POST", "GET"])
 @login_required
 def summarize_by_id(book_id):
-    return render_template("summarize.html")
+    form = static.forms.summ_by_id_form.SummByIdForm()
+    book = db_sess.query(models.books.Books).get(book_id)
+    if book:
+        if form.is_submitted():
+            text_of_book = (
+                db_sess.query(models.text_of_book.TextOfBook)
+                .filter_by(book_id=book.id)
+                .first()
+                .text
+            )
+            if form.type_of_sum.data == "Сильное сжатие":
+                text = functions.sum_alg.summarize_text(text_of_book, "strong")
+                return render_template(
+                    "read_book.html",
+                    title=f"Сжатое произведение {book.title}",
+                    text_of_book=text,
+                    summ_text=f"Сжатое произведение {book.title}",
+                    user_is_auth=current_user.is_authenticated,
+                    admin=(
+                        current_user.admin
+                        if current_user.is_authenticated
+                        else False
+                    ),
+                )
+            else:
+                text = functions.sum_alg.summarize_text(text_of_book, "weak")
+                return render_template(
+                    "read_book.html",
+                    title=f"Сжатое произведение {book.title}",
+                    text_of_book=text,
+                    summ_text=f"Сжатое произведение {book.title}",
+                    user_is_auth=current_user.is_authenticated,
+                    admin=(
+                        current_user.admin
+                        if current_user.is_authenticated
+                        else False
+                    ),
+                )
+        return render_template(
+            "summarize.html",
+            user_is_auth=current_user.is_authenticated,
+            admin=(
+                current_user.admin if current_user.is_authenticated else False
+            ),
+            title=f"Сжать {book.title}",
+            form=form,
+            book=book,
+        )
+    else:
+        return (
+            render_template(
+                "404.html",
+                title="404 Not Found",
+            ),
+            404,
+        )
+
+    return render_template(
+        "summarize.html",
+        user_is_auth=current_user.is_authenticated,
+        admin=current_user.admin if current_user.is_authenticated else False,
+        title="Сжать книгу",
+        form=form,
+    )
 
 
 @app.route("/check-speed-of-reading")
@@ -161,6 +256,7 @@ def check_speed_of_reading():
 
 
 @app.route("/test/<int:book_id>")
+@login_required
 def test_by_book(book_id: int):
     book = db_sess.query(models.books.Books).get(book_id)
     if book:
@@ -185,7 +281,7 @@ def test_by_book(book_id: int):
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    form = forms.reg_form.RegisterForm()
+    form = static.forms.reg_form.RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template(
@@ -226,7 +322,7 @@ def register():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    form = forms.login_form.LoginForm()
+    form = static.forms.login_form.LoginForm()
     if form.validate_on_submit():
         db_sess = models.db_session.create_session()
         user = (
@@ -245,7 +341,7 @@ def login():
 
 @app.route("/admin-login", methods=["POST", "GET"])
 def admin_login():
-    form = forms.login_form.LoginForm()
+    form = static.forms.login_form.LoginForm()
     if form.validate_on_submit():
         db_sess = models.db_session.create_session()
         user = (
@@ -282,7 +378,7 @@ def logout():
 @app.route("/ask", methods=["GET", "POST"])
 @login_required
 def ask():
-    form = forms.chat.ChatForm()
+    form = static.forms.chat.ChatForm()
     if form.validate_on_submit():
         messages = ai.message(form.message.data)
         messages = ai.get_messages()
@@ -312,12 +408,14 @@ def ask():
 def catalog():
     db_sess = models.db_session.create_session()
     books = db_sess.query(models.books.Books).all()
+    generes = db_sess.query(models.generes.Generes).all()
     return render_template(
         "catalog.html",
         title="Каталог",
         user_is_auth=current_user.is_authenticated,
         admin=current_user.admin if current_user.is_authenticated else False,
         books=books,
+        generes=generes,
     )
 
 
@@ -350,24 +448,68 @@ def book_in_catalog(book_id: int):
         )
 
 
+@app.route("/catalog/<string:genere_name>")
+@login_required
+def sort_catalog_by_genere(genere_name: str):
+    genere = (
+        db_sess.query(models.generes.Generes)
+        .filter_by(en_name=genere_name)
+        .first()
+    )
+    if genere:
+        generes = db_sess.query(models.generes.Generes).all()
+        books = (
+            db_sess.query(models.books.Books).filter_by(genere=genere.id).all()
+        )
+        return render_template(
+            "catalog.html",
+            title="Каталог",
+            books=books,
+            user_is_auth=current_user.is_authenticated,
+            admin=(
+                current_user.admin if current_user.is_authenticated else False
+            ),
+            generes=generes,
+        )
+    else:
+        return (
+            render_template(
+                "404.html",
+                title="404 Not Found",
+            ),
+            404,
+        )
+
+
 @app.route("/read/<int:book_id>")
 @login_required
 def read_book_in_catalog(book_id: int):
     db_sess = models.db_session.create_session()
     book = db_sess.query(models.books.Books).get(book_id)
-    text_of_book = (
-        db_sess.query(models.text_of_book.TextOfBook).get(book_id).text
-    )
-    author = db_sess.query(models.authors.Authors).get(book.author).name
-    return render_template(
-        "read_book.html",
-        title=book.title,
-        user_is_auth=current_user.is_authenticated,
-        admin=current_user.admin if current_user.is_authenticated else False,
-        text_of_book=text_of_book,
-        book=book,
-        author=author,
-    )
+    if book:
+        text_of_book = (
+            db_sess.query(models.text_of_book.TextOfBook).get(book_id).text
+        )
+        author = db_sess.query(models.authors.Authors).get(book.author).name
+        return render_template(
+            "read_book.html",
+            title=book.title,
+            user_is_auth=current_user.is_authenticated,
+            admin=(
+                current_user.admin if current_user.is_authenticated else False
+            ),
+            text_of_book=text_of_book,
+            book=book,
+            author=author,
+        )
+    else:
+        return (
+            render_template(
+                "404.html",
+                title="404 Not Found",
+            ),
+            404,
+        )
 
 
 def main():

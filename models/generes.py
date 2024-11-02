@@ -7,4 +7,5 @@ class Generes(SqlAlchemyBase):
     __tablename__ = "generes"
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)
+    en_name = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)

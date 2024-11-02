@@ -8,16 +8,34 @@ def preprocess_text(text):
     return sentences
 
 
-def summarize_text(text, compression_level="weak"):
-    sentences = preprocess_text(text)
+def summarize_text(text: str, compression_level: str = "weak") -> None:
+    """Эта функция связывает в себе две функции.
 
+    Args:
+        text (str): Текст, который нужно сжать.
+        compression_level (str, optional): Уровень сжатия. Есть два: 'strong' и 'weak'. Defaults to "weak".
+
+    Returns:
+        None: Просто связывает две функции.
+    """
+    sentences = preprocess_text(text)
     if compression_level == "strong":
         return strong_summary(sentences)
     elif compression_level == "weak":
         return weak_summary(sentences)
 
 
-def weak_summary(sentences):
+def weak_summary(sentences: list) -> str:
+    """Функция weak_summary принимает список предложений и возвращает краткое содержание текста.
+    Для этого она использует метод TF-IDF и алгоритм PageRank.
+
+    Args:
+        sentences (list): Список предложений текста
+
+
+    Returns:
+        str: Сжатый текст до примерно 3% от исходного.
+    """
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(sentences)
     similarity_matrix = X * X.T
@@ -42,7 +60,16 @@ def weak_summary(sentences):
     return summary
 
 
-def strong_summary(sentences):
+def strong_summary(sentences: list) -> str:
+    """Функция strong_summary принимает список предложений и возвращает краткое содержание текста.
+    Для этого она использует метод TF-IDF и алгоритм PageRank.
+
+    Args:
+        sentences (list): Список предложений текста
+
+    Returns:
+        str: Сжатый текст до примерно 1% от исходного.
+    """
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(sentences)
     similarity_matrix = X * X.T

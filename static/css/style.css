@@ -36,6 +36,10 @@ body {
     font-family: 'Inter';
 }
 
+li {
+  list-style-type: none;
+}
+
 /* .highlighted-text {
   position: relative;
   display: inline-block;
@@ -96,6 +100,24 @@ body {
   font-size: xx-large;
 }
 
-.login-link {
-  color: #fd7e14;
+#type_of_sum {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Стили для первого input (Сильное сжатие) */
+#type_of_sum-0, #type_of_sum-1 {
+  width: 20px;
+  height: 20px;
+  accent-color: #6c757d; /* Цвет кнопки */
+  cursor: pointer;
+  border: 2px solid #6c757d; /* Цвет рамки */
+  margin-right: 10px;
+}
+
+/* Стиль для активного состояния (если нужно одинаковое для обоих) */
+#type_of_sum-0:checked,
+#type_of_sum-1:checked {
+  background-color: #007bff; /* Цвет фона при выборе */
+  border-color: #0056b3; /* Цвет рамки при выборе */
 }

@@ -1,6 +1,6 @@
-from datetime import datetime
 import os
 import os.path as op
+from datetime import datetime
 
 import dotenv
 from flask import Flask, redirect, render_template, session, url_for
@@ -526,7 +526,7 @@ def start_test():
 @app.route("/end-test", methods=["POST", "GET"])
 @login_required
 def end_test():
-    start_time_str = session.get('start_time')
+    start_time_str = session.get("start_time")
     if start_time_str is None:
         return redirect("/not-found")
 

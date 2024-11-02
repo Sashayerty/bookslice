@@ -3,6 +3,7 @@
 <div class="container">
     <p class="fs-3 text-center mt-4 mb-3 fw-bold">Проверка скорости чтения</p>
     <p class="fs-3 my-3 fw-semibold">Карловы Вары</p>
+    <p class="fs-3 fw-bold my-3" id="stopwatch">Время: 00:00</p>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
             <p style="text-indent: 35px;" class="fs-4 p-5 shadow-sm border border-2 rounded">
@@ -11,9 +12,11 @@
                 После своего исцеления благодаря чудотворной воде Карл IV повелел выстроить в этом прекрасном месте новый город. Точная дата основания города неизвестна, но появление первых населённых пунктов в окрестностях гейзера датируется серединой XIV века. А название, которое получил город, стало напоминанием о его «первооткрывателе» — Карловы Вары.
             </p>
         </div>
-        <div class="d-grid col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-            <a href="" class="btn btn-secondary shadow-lg my-2">Начать тест</a><br>
-            <a href="" class="btn btn-secondary shadow-lg my-2">Закончить тест</a>
+        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
+            <div class="container d-grid ">
+                <a id="start" onclick="startStopwatch()" class="btn btn-secondary shadow-lg my-2">Начать тест</a><br>
+            </div>
+            
         </div>
     </div>
 </div>

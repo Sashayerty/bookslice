@@ -1,8 +1,9 @@
+from datetime import datetime
 import os
 import os.path as op
 
 import dotenv
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template, session, url_for
 from flask_admin import Admin, AdminIndexView
 from flask_babel import Babel
 from flask_login import (
@@ -37,9 +38,8 @@ import static.forms.reg_form
 import static.forms.summ_by_id_form
 import static.forms.summ_form
 
-dotenv.load_dotenv(dotenv.find_dotenv())
-
 app = Flask(__name__)
+dotenv.load_dotenv(dotenv.find_dotenv())
 adminka = Admin(
     app,
     name="BookSlice Admin",
@@ -56,7 +56,6 @@ path = op.join(op.dirname(__file__), "static")
 babel = Babel(app, locale_selector=admin.localozation.localization.get_locale)
 
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
-app.config["ALLOWED_EXTENSIONS"] = ["txt"]
 # app.config["FLASK_ADMIN_SWATCH"] = "Cosmo"
 
 adminka.add_views(
@@ -515,6 +514,36 @@ def read_book_in_catalog(book_id: int):
             ),
             404,
         )
+
+
+@app.route("/start-test", methods=["POST", "GET"])
+@login_required
+def start_test():
+    session["start_time"] = datetime.now().isoformat()
+    return "", 204
+
+
+@app.route("/end-test", methods=["POST", "GET"])
+@login_required
+def end_test():
+    start_time_str = session.get('start_time')
+    if start_time_str is None:
+        return redirect("/not-found")
+
+    start_time = datetime.fromisoformat(start_time_str)
+    end_time = datetime.now()
+    duration = (end_time - start_time).total_seconds() / 60
+
+    word_count = 188
+
+    reading_speed = word_count / duration
+
+    db_sess.query(models.user.User).get(current_user.id).speed_of_reading = (
+        int(reading_speed)
+    )
+    db_sess.commit()
+    session["start_time"] = None
+    return redirect("/profile")
 
 
 def main():

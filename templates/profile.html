@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile container d-grid align-items-center">
+    <div class="profile-container p-5 row shadow-lg border border-2 rounded-4">
+        <div class="row">
+            <div class="col d-flex justify-content-center fs-1 mb-3">
+               <p class="fw-medium">
+                    Личные данные
+               </p>
+            </div>
+        </div>
+        <div class="col-xs col-sm col-md col-lg-4 col-xl-4 col-xxl-4 d-flex my-3 justify-content-center align-items-center">
+            <div class="profile-icon username">
+                <svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" fill="#6c757d" class="bi bi-person-circle"
+                    viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                    <path fill-rule="evenodd"
+                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                </svg>
+            </div>
+        </div>
+        <div class="col-xs col-sm col-md col-lg-8 col-xl-8 col-xxl-8 d-grid align-items-center fs-4">
+            <div class="username-box">
+                <p class="username">Имя: {{ name }}</p>
+            </div>
+            <div class="email-box">
+                <p class="email">Почта: {{ email }}</p>
+            </div>
+            {% if speed_of_reading %}
+            <div class="speed-box row">
+                <div class="col">
+                    <p class="speed">Скорость чтения: {{ speed_of_reading }} слов/мин</p>
+                </div>
+                <div class="col">
+                    <a href="/check-speed-of-reading" class="btn btn-secondary shadow-lg">Проверить скорость чтения</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/check-speed-of-reading" class="btn btn-secondary shadow-lg">Проверить скорость чтения</a>
+            {% endif %}
+        </div>
+        
+    </div>
+</div>
+{% endblock content %}

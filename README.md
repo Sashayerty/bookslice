@@ -6,9 +6,10 @@
 ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 
+## ***[-Видео с демонстрацией функционала-](https://disk.yandex.ru/i/XjbH25PTdTH8xg)***
+
 ## Содержание
 
-- ***[-Видео с демонстрацией функционала-](https://disk.yandex.ru/i/XjbH25PTdTH8xg)***
 - [Список папок и файлов](#список-папок-и-файлов)
 - [Пример `.env` файла](#пример-env-файла)
 - [Как запустить проект](#как-запустить-проект)

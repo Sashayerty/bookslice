@@ -4,6 +4,8 @@ from .db_session import SqlAlchemyBase
 
 
 class BooksOfUser(SqlAlchemyBase):
+    """Модель книг пользоавтеля"""
+
     __tablename__ = "books_of_user"
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)

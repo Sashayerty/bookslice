@@ -5,7 +5,7 @@
 from .base_view import BaseView
 
 
-class TextOfBook(BaseView):
+class TextOfBookView(BaseView):
     def _shorten_text(view, context, model, name):
         text = getattr(model, name)
         return text[:200] + "..." if len(text) > 200 else text

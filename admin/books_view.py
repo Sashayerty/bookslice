@@ -1,7 +1,7 @@
 from .base_view import BaseView
 
 
-class Books(BaseView):
+class BooksView(BaseView):
     column_list = ("id", "title", "author", "writed_in", "original", "genere")
     column_filters = ("title", "genere", "original")
     column_labels = {

@@ -7,7 +7,16 @@ SqlAlchemyBase = orm.declarative_base()
 __factory = None
 
 
-def global_init(db_file):
+def global_init(db_file: str):
+    """Инициализация базы данных.
+
+    Args:
+        db_file (str): путь к файлу бд
+    Returns:
+        None
+    Raises:
+        Exception: Если не указан файл базы данных.
+    """
     global __factory
 
     if __factory:

@@ -1,7 +1,7 @@
 from .base_view import BaseView
 
 
-class Generes(BaseView):
+class GeneresView(BaseView):
     column_list = ("id", "name", "en_name")
     column_filters = ("name",)
     column_labels = {
@@ -10,3 +10,4 @@ class Generes(BaseView):
         "en_name": "Название на латинице",
     }
     column_searchable_list = ("name",)
+    column_editable_list = ("name", "en_name")

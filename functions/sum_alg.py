@@ -1,7 +1,8 @@
+from random import choice
+
 import networkx as nx
 from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
-from random import choice
 
 
 def summarize_text(text: str, compression_level: str = "weak") -> str:
@@ -26,9 +27,9 @@ def summarize_text(text: str, compression_level: str = "weak") -> str:
     if compression_level == "strong":
         return sorted(ranked_sentences)[-1][1]
         # При сильном сжатии выдаём самое важное предложение
-    n = 0
-    while n < 5:
+    for j in range(5):
         # При слабом сжатии проходимся по предложениям и из двух оставляем более важное
+        # Количество сокращений на половину - 5 раз, т.е 6% +- рандом
         dellist = []
         for i in range(0, len(ranked_sentences), 2):
             if len(ranked_sentences) > i + 1:
@@ -42,6 +43,5 @@ def summarize_text(text: str, compression_level: str = "weak") -> str:
             # Менее важные предложения могут остаться с шансом 25%
             if choice([1, 1, 1, 0]) == 1:
                 ranked_sentences.remove(i)
-        n += 1  # Количество сокращений на половину - 5 раз, т.е 6% +- рандом
     summary = "\n".join([sent for _, sent in ranked_sentences])
     return summary

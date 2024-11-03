@@ -4,6 +4,8 @@ from .db_session import SqlAlchemyBase
 
 
 class Generes(SqlAlchemyBase):
+    """Модель жанров"""
+
     __tablename__ = "generes"
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)

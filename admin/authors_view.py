@@ -1,7 +1,7 @@
 from .base_view import BaseView
 
 
-class Authors(BaseView):
+class AuthorsView(BaseView):
     can_create = True
     can_edit = True
     can_delete = True

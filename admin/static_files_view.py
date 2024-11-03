@@ -3,7 +3,7 @@ from flask import redirect, request, url_for
 from flask_admin.contrib.fileadmin import FileAdmin
 
 
-class StaticFiles(FileAdmin):
+class StaticFilesView(FileAdmin):
     def is_accessible(self):
         return login.current_user.is_authenticated and login.current_user.admin
 

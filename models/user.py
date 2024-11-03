@@ -8,6 +8,8 @@ from .db_session import SqlAlchemyBase
 
 
 class User(SqlAlchemyBase, UserMixin):
+    """Модель юзера"""
+
     __tablename__ = "user"
 
     id = sqlalchemy.Column(

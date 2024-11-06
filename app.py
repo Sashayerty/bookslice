@@ -66,26 +66,31 @@ adminka.add_views(
         Books,
         db_sess,
         name="Книги",
+        category="Модели",
     ),
     AuthorsView(
         Authors,
         db_sess,
         name="Авторы",
+        category="Модели",
     ),
     GeneresView(
         Generes,
         db_sess,
         name="Жанры",
+        category="Модели",
     ),
     TextOfBookView(
         TextOfBook,
         db_sess,
         name="Тексты книг",
+        category="Модели",
     ),
     UsersView(
         User,
         db_sess,
         name="Пользователи",
+        category="Модели",
     ),
 )
 adminka.add_view(

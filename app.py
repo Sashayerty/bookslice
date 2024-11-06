@@ -1,7 +1,6 @@
 import os.path as op
 from datetime import datetime
 
-import dotenv
 from flask import Flask, redirect, render_template, session, url_for
 from flask_admin import Admin, AdminIndexView
 from flask_babel import Babel
@@ -13,12 +12,6 @@ from flask_login import (
     logout_user,
 )
 
-import static.forms
-import static.forms.chat
-import static.forms.login_form
-import static.forms.reg_form
-import static.forms.summ_by_id_form
-import static.forms.summ_form
 from admin import (
     AuthorsView,
     BooksView,
@@ -31,13 +24,18 @@ from admin.localization.localization import get_locale
 from config import config
 from functions import AI, summarize_text
 from models import Authors, Books, Generes, TextOfBook, User, db_session
+from static.forms import (
+    ChatForm,
+    LoginForm,
+    RegisterForm,
+    SummByIdForm,
+    SummForm,
+)
 
 # Создание констант для работы проекта
 
 app = Flask(__name__)
 app.config.from_object(config)
-
-dotenv.load_dotenv(dotenv.find_dotenv())
 
 adminka = Admin(
     app,
@@ -173,7 +171,7 @@ def profile():
 @login_required
 def summarize():
     """Страница сжатия"""
-    form = static.forms.summ_form.SummForm()
+    form = SummForm()
     if form.is_submitted():
         if form.type_of_sum.data == "Сильное сжатие":
             text = summarize_text(form.text.data[:1000000], "strong")
@@ -216,7 +214,7 @@ def summarize():
 @login_required
 def summarize_by_id(book_id):
     """Страница сжатия конкретной книги по id"""
-    form = static.forms.summ_by_id_form.SummByIdForm()
+    form = SummByIdForm()
     book = db_sess.query(Books).get(book_id)
     if book:
         if form.is_submitted():
@@ -314,7 +312,7 @@ def test_by_book(book_id: int):
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Страница регистрации"""
-    form = static.forms.reg_form.RegisterForm()
+    form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template(
@@ -352,7 +350,7 @@ def register():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     """Страница входа"""
-    form = static.forms.login_form.LoginForm()
+    form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = (
@@ -370,7 +368,7 @@ def login():
 @app.route("/admin-login", methods=["POST", "GET"])
 def admin_login():
     """Страница входа в админку"""
-    form = static.forms.login_form.LoginForm()
+    form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = (
@@ -407,7 +405,7 @@ def logout():
 @login_required
 def ask():
     """Страница для общения с ИИ"""
-    form = static.forms.chat.ChatForm()
+    form = ChatForm()
     if form.validate_on_submit():
         messages = ai.message(form.message.data)
         messages = ai.get_messages()

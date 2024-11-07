@@ -365,7 +365,7 @@ def login():
     return render_template("login.html", title="Вход", form=form)
 
 
-@app.route("/admin-login", methods=["POST", "GET"])
+@app.route("/admin/login", methods=["POST", "GET"])
 def admin_login():
     """Страница входа в админку"""
     form = LoginForm()

@@ -58,8 +58,6 @@ AI_OLIMP_2024/
 ## Пример `.env` файла
 
 ```env
-FLASK_DEBUG="True"
-FLASK_SECRET_KEY="your-flask-secret-key"
 YANDEX_KEY=your-yandex-secret-key
 ```
 

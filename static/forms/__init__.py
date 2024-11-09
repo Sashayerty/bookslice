@@ -1,7 +1,7 @@
 from .chat import ChatForm
 from .login_form import LoginForm
 from .reg_form import RegisterForm
-from .summ_by_id_form import SummByIdForm
-from .summ_form import SummForm
+from .sum_by_id_form import SumByIdForm
+from .sum_form import SumForm
 
-__all__ = ["ChatForm", "LoginForm", "RegisterForm", "SummByIdForm", "SummForm"]
+__all__ = ["ChatForm", "LoginForm", "RegisterForm", "SumByIdForm", "SumForm"]

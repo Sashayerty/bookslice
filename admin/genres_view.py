@@ -1,7 +1,7 @@
 from .base_view import BaseView
 
 
-class GeneresView(BaseView):
+class GenresView(BaseView):
     column_list = ("id", "name", "en_name")
     column_filters = ("name",)
     column_labels = {

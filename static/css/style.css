@@ -1,39 +1,50 @@
 /* inter-regular - cyrillic_latin */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    src: url('../fonts/inter-v18-cyrillic_latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* inter-500 - cyrillic_latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    src: url('../fonts/inter-v18-cyrillic_latin-500.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* inter-600 - cyrillic_latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 600;
-    src: url('../fonts/inter-v18-cyrillic_latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* inter-700 - cyrillic_latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    src: url('../fonts/inter-v18-cyrillic_latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/inter-v18-cyrillic_latin-regular.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* inter-500 - cyrillic_latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/inter-v18-cyrillic_latin-500.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* inter-600 - cyrillic_latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/inter-v18-cyrillic_latin-600.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* inter-700 - cyrillic_latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/inter-v18-cyrillic_latin-700.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
 
 
 body {
-    font-family: 'Inter';
+  font-family: 'Inter';
 }
 
 li {
@@ -56,20 +67,21 @@ li {
 } */
 
 .container-f-1 {
-    border: 4px solid #198754;
-    border-radius: 20px;
-    min-height: 8rem;
+  border: 4px solid #198754;
+  border-radius: 20px;
+  min-height: 8rem;
 }
+
 .container-f-2 {
-    border: 4px solid #fd7e14;
-    border-radius: 20px;
-    min-height: 8rem;
+  border: 4px solid #fd7e14;
+  border-radius: 20px;
+  min-height: 8rem;
 }
 
 .container-f-3 {
-    border: 4px solid #6c757d;
-    border-radius: 20px;
-    min-height: 8rem;
+  border: 4px solid #6c757d;
+  border-radius: 20px;
+  min-height: 8rem;
 }
 
 .login {
@@ -106,18 +118,27 @@ li {
 }
 
 /* Стили для первого input (Сильное сжатие) */
-#type_of_sum-0, #type_of_sum-1 {
+#type_of_sum-0,
+#type_of_sum-1 {
   width: 20px;
   height: 20px;
-  accent-color: #6c757d; /* Цвет кнопки */
+  accent-color: #6c757d;
+  /* Цвет кнопки */
   cursor: pointer;
-  border: 2px solid #6c757d; /* Цвет рамки */
+  border: 2px solid #6c757d;
+  /* Цвет рамки */
   margin-right: 10px;
 }
 
 /* Стиль для активного состояния (если нужно одинаковое для обоих) */
 #type_of_sum-0:checked,
 #type_of_sum-1:checked {
-  background-color: #007bff; /* Цвет фона при выборе */
-  border-color: #0056b3; /* Цвет рамки при выборе */
+  background-color: #007bff;
+  /* Цвет фона при выборе */
+  border-color: #0056b3;
+  /* Цвет рамки при выборе */
+}
+
+.book-container {
+  max-width: 100vh;
 }

@@ -3,10 +3,10 @@ import sqlalchemy
 from .db_session import SqlAlchemyBase
 
 
-class BooksOfUser(SqlAlchemyBase):
-    """Модель книг пользователя"""
+class AchievementsOfUsers(SqlAlchemyBase):
+    """Модель ачивок юзеров"""
 
-    __tablename__ = "books_of_user"
+    __tablename__ = "achievements_of_users"
 
     id = sqlalchemy.Column(
         sqlalchemy.Integer,
@@ -16,11 +16,7 @@ class BooksOfUser(SqlAlchemyBase):
         sqlalchemy.Integer,
         nullable=False,
     )
-    book_id = sqlalchemy.Column(
-        sqlalchemy.Integer,
-        nullable=False,
-    )
-    status = sqlalchemy.Column(
+    achievement_id = sqlalchemy.Column(
         sqlalchemy.Integer,
         nullable=False,
     )

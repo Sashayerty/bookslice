@@ -1,19 +1,23 @@
 from . import db_session
+from .achievements import Achievements
+from .achievements_of_users import AchievementsOfUsers
 from .authors import Authors
 from .books import Books
 from .books_of_user import BooksOfUser
 from .description_of_user import DescriptionOfUser
-from .generes import Generes
+from .genres import Genres
 from .text_of_book import TextOfBook
-from .user import User
+from .users import Users
 
 __all__ = [
     "Authors",
     "BooksOfUser",
     "Books",
     "DescriptionOfUser",
-    "Generes",
+    "Genres",
     "TextOfBook",
-    "User",
+    "Users",
+    "Achievements",
+    "AchievementsOfUsers",
     "db_session",
 ]

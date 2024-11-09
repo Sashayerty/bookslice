@@ -2,23 +2,23 @@ from .base_view import BaseView
 
 
 class BooksView(BaseView):
-    column_list = ("id", "title", "author", "writed_in", "original", "genere")
-    column_filters = ("title", "genere", "original")
+    column_list = ("id", "title", "author", "wrote_in", "original", "genre")
+    column_filters = ("title", "genre", "original")
     column_labels = {
         "id": "ID",
         "description": "Описание",
         "count_of_words": "Количество слов",
         "title": "Название книги",
         "author": "Автор",
-        "writed_in": "Год издания",
+        "wrote_in": "Год издания",
         "original": "Оригинальность",
-        "genere": "Жанр",
+        "genre": "Жанр",
     }
     column_editable_list = (
         "title",
         "author",
-        "writed_in",
-        "genere",
+        "wrote_in",
+        "genre",
         "original",
     )
     column_searchable_list = ("title", "author")

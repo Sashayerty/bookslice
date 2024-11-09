@@ -1,6 +1,6 @@
 [flake8]
 max-line-length = 120
 inline-quotes = double
-exclude = ['venv']
+exclude = venv, __all_models.py, __init__.py
 [isort]
 profile = "black"

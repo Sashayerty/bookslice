@@ -1,19 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a class="nav-link" href="/catalog">Каталог</a></li>
-          <li class="breadcrumb-item" aria-current="page">{{ book.title }}</li>
+            <li class="breadcrumb-item"><a class="nav-link" href="/catalog">Каталог</a></li>
+            <li class="breadcrumb-item" aria-current="page">{{ book.title }}</li>
         </ol>
     </nav>
 </div>
 <div class="about container mt-5">
     <div class="book-con row shadow border border-2 rounded-2 p-5">
-        <div class="col-xs col-sm col-md col-lg-3 col-xl-3 col-xxl-3 d-grid my-3 justify-content-center align-items-baseline">
+        <div
+            class="col-xs col-sm col-md col-lg-3 col-xl-3 col-xxl-3 d-grid my-3 justify-content-center align-items-baseline">
             <div class="container d-grid">
-                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#6c757d" class="bi bi-book" viewBox="0 0 16 16">
-                    <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#6c757d" class="bi bi-book"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
                 </svg>
                 <a href="/read/{{ book.id }}" class="btn btn-secondary shadow-lg my-3">Читать</a>
                 <a href="/summarize/{{ book.id }}" class="btn btn-secondary shadow-lg my-3">Сжать книгу</a>
@@ -21,9 +25,17 @@
             </div>
         </div>
         <div class="col-xs col-sm col-md col-lg-9 col-xl-9 col-xxl-9 d-grid align-items-center">
-            <p class="fs-2 fw-medium">{{ book.title }} <span class="badge text-bg-secondary border border-1 shadow fs-5 fw-light">{{ genere.name if genere.name else "Нет жанра" }}</span></p>
+            <div class="row">
+                <p class="m-0 p-0 fs-2 fw-medium">{{ book.title }}
+                    <span class="badge text-bg-secondary border border-1 shadow fs-5 fw-light">
+                        {{ genre.name if
+                        genre.name
+                        else "Нет жанра" }}
+                    </span>
+                </p>
+            </div>
             <p class="fs-3">Автор: {{ author.name }}</p>
-            <p class="fs-3">Год издания: {{ book.writed_in }}</p>
+            <p class="fs-3">Год издания: {{ book.wrote_in }}</p>
             {% if book.description %}
             <p class="fs-4">Описание: {{ book.description }}</p>
             {% else %}

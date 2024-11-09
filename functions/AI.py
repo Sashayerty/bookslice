@@ -43,5 +43,5 @@ class AI:
     def get_messages(self):
         return self.prompt["messages"]
 
-    def set_messages(self, messags):
-        self.msgs = messags
+    def set_messages(self, messages):
+        self.msgs = messages

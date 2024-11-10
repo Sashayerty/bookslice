@@ -22,8 +22,8 @@ from admin import (
     StaticFilesView,
     TextOfBookView,
     UsersView,
+    get_locale,
 )
-from admin.localization.localization import get_locale
 from config import config
 from functions import AI, split_into_pages, summarize_text
 from models import (
@@ -64,6 +64,8 @@ ai = AI()
 
 db_session.global_init(app.config["DATABASE_URI"])
 db_ses = db_session.create_session()
+
+achievements = db_ses.query(Achievements).all()  # Список всех ачивок
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -606,11 +608,10 @@ def book_in_catalog(
     book_id: int,
 ):
     """Страница книги"""
-    db_sess = db_session.create_session()
-    book = db_sess.query(Books).get(book_id)
+    book = db_ses.query(Books).get(book_id)
     if book:
-        author = db_sess.query(Authors).get(book.author)
-        genre = db_sess.query(Genres).get(book.genre)
+        author = db_ses.query(Authors).get(book.author)
+        genre = db_ses.query(Genres).get(book.genre)
         return render_template(
             "about_book.html",
             title=book.title,
@@ -670,6 +671,14 @@ def read_book_in_catalog(
     """Страница чтения книги"""
     db_sess = db_session.create_session()
     book = db_sess.query(Books).get(book_id)
+    is_book_of_user = (
+        db_ses.query(BooksOfUser)
+        .filter_by(
+            user_id=current_user.id,
+            book_id=book_id,
+        )
+        .first()
+    )
     if book:
         text = (
             db_sess.query(TextOfBook).filter_by(book_id=book_id).first().text
@@ -679,18 +688,43 @@ def read_book_in_catalog(
         )
         len_of_list_of_pages = len(text_of_book)
         author = db_sess.query(Authors).get(book.author).name
-        return render_template(
-            "read_book.html",
-            title=book.title,
-            user_is_auth=current_user.is_authenticated,
-            admin=(
-                current_user.admin if current_user.is_authenticated else False
-            ),
-            text_of_book=enumerate(text_of_book, start=1),
-            len_of_list_of_pages=len_of_list_of_pages,
-            book=book,
-            author=author,
-        )
+        if is_book_of_user:
+            is_book_of_user.status = "Читает"
+            db_ses.commit()
+            return render_template(
+                "read_book.html",
+                title=book.title,
+                user_is_auth=current_user.is_authenticated,
+                admin=(
+                    current_user.admin
+                    if current_user.is_authenticated
+                    else False
+                ),
+                text_of_book=enumerate(text_of_book, start=1),
+                len_of_list_of_pages=len_of_list_of_pages,
+                book=book,
+                author=author,
+            )
+        else:
+            book_of_user = BooksOfUser(
+                user_id=current_user.id, book_id=book.id, status="Читает"
+            )
+            db_ses.add(book_of_user)
+            db_ses.commit()
+            return render_template(
+                "read_book.html",
+                title=book.title,
+                user_is_auth=current_user.is_authenticated,
+                admin=(
+                    current_user.admin
+                    if current_user.is_authenticated
+                    else False
+                ),
+                text_of_book=enumerate(text_of_book, start=1),
+                len_of_list_of_pages=len_of_list_of_pages,
+                book=book,
+                author=author,
+            )
     else:
         return (
             render_template(
@@ -745,8 +779,86 @@ def end_test():
     return redirect("/profile")
 
 
+@app.route(
+    "/add-book-to-wishlist/<int:book_id>",
+    methods=[
+        "POST",
+        "GET",
+    ],
+)
+@login_required
+def add_book_to_wishlist(book_id: int):
+    """Добавляет книгу в список желаемого по id"""
+    book = db_ses.query(Books).get(book_id)
+    books_of_user = (
+        db_ses.query(BooksOfUser)
+        .filter_by(
+            user_id=current_user.id,
+            book_id=book_id,
+        )
+        .first()
+    )
+    if book:
+        if books_of_user:
+            books_of_user.status = "Хочет прочитать"
+        else:
+            books_of_user = BooksOfUser(
+                user_id=current_user.id,
+                book_id=book_id,
+                status="Хочет прочитать",
+            )
+            db_ses.add(books_of_user)
+        db_ses.commit()
+        return redirect(url_for("book_in_catalog", book_id=book_id))
+    else:
+        return redirect(url_for("not_found"))
+
+
+@app.route(
+    "/mark-book-as-read/<int:book_id>",
+    methods=[
+        "POST",
+        "GET",
+    ],
+)
+@login_required
+def mark_as_read(book_id: int):
+    """Помечает книгу как прочитанную"""
+    book = db_ses.query(Books).get(book_id)
+    books_of_user = (
+        db_ses.query(BooksOfUser)
+        .filter_by(
+            user_id=current_user.id,
+            book_id=book_id,
+        )
+        .first()
+    )
+    if book:
+        if books_of_user:
+            books_of_user.status = "Прочитал"
+        else:
+            books_of_user = BooksOfUser(
+                user_id=current_user.id,
+                book_id=book_id,
+                status="Прочитал",
+            )
+            db_ses.add(books_of_user)
+        user = db_ses.query(Users).get(current_user.id)
+        if user.read_books:
+            user.read_books += 1
+        else:
+            user.read_books = 1
+        db_ses.commit()
+        return redirect(url_for("book_in_catalog", book_id=book_id))
+    else:
+        return redirect(url_for("not_found"))
+
+
 def main():
     """Запуск проекта"""
+    if app.config["DEBUG"]:
+        ach = db_ses.query(Achievements).all()
+        print([i.as_dict() for i in ach])
     app.run(debug=app.config["DEBUG"])
 
 

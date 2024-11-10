@@ -13,7 +13,7 @@
   {% for page in text_of_book %}
   {% if page[0] == len_of_list_of_pages %}
   {{ page[1] }}
-  <a href="/mark-book-as-read">
+  <a href="/mark-book-as-read/{{ book.id }}">
     Книга прочитана
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check"
       viewBox="0 0 16 16">

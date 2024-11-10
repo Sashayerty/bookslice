@@ -28,7 +28,7 @@ class Achievements(SqlAlchemyBase):
     type = sqlalchemy.Column(
         sqlalchemy.String,
         nullable=False,
-    )  # тип ачивки
+    )  # тип ачивки books pages summarazed_books
     condition = sqlalchemy.Column(
         sqlalchemy.Integer,
         nullable=False,
@@ -37,3 +37,13 @@ class Achievements(SqlAlchemyBase):
         sqlalchemy.Integer,
         nullable=False,
     )  # баллы
+
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "type": self.type,
+            "condition": self.condition,
+            "reward": self.reward,
+        }

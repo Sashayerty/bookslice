@@ -7,6 +7,11 @@ db
 app.db
 ngrok.exe
 
+fixtures
+fixtures.py
+TODO.md
+
+
 # C extensions
 *.so
 denv

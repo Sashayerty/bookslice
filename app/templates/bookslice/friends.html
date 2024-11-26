@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="container fs-3 mb-3">Друзья</div>
+    <form class="d-flex justify-content-between" action="/friends" method="get">
+        <input class="form-control me-2 focus-ring focus-ring-dark text-decoration-none border rounded-2" type="text"
+            name="search" placeholder="Поиск по id или имени" />
+        <button class="btn btn-secondary" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search"
+                viewBox="0 0 16 16">
+                <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+        </button>
+    </form>
+    {% for i in friends %}
+    <div class="container border shadow rounded-2 p-3 my-2 d-flex align-items-center justify-content-between">
+        {{ i.id }}
+        {{ i.name }}
+        <div class="align-self-end">
+            <a class="btn btn-outline-secondary" href="/add-friend/{{ i.id }}">Отправить запрос в друзья</a>
+            <a class="btn btn-outline-secondary" href="/delete-friend/{{ i.id }}">Удалить из друзей</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

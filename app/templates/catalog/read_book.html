@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block content %}
+<div class="book-container container fs-4">
+  {% if current_page == 1 %} {% if author %}
+  <!-- Автор книги (если есть) -->
+  <p class="text-center fs-1 fw-semibold my-4">{{ author }}</p>
+  {% endif %} {% if book %}
+  <!-- Название книги (если есть) -->
+  <p class="text-center fs-2 fw-semibold my-4">{{ book.title }}</p>
+  {% endif %} {% endif %} {% if sum_text %}
+  <p class="text-center fs-2 fw-semibold my-4">{{ sum_text }}</p>
+  {% endif %} {% for page in text_of_book %} {{ page[1] }} {% endfor %}
+</div>
+
+{% if not summarizing %}
+<!-- Кнопка "Книга прочитана" -->
+{% if current_page == total_pages %}
+<div class="text-center my-4">
+  <form action="/catalog/mark-book-as-read?book_id={{ book.id }}" method="POST">
+    <button type="submit" class="btn btn-secondary">Книга прочитана</button>
+  </form>
+</div>
+{% endif %}
+
+<!-- Пагинация -->
+<div class="pagination d-flex justify-content-center my-4">
+  {% if current_page > 1 %}
+  <a
+    href="/catalog/read?book_id={{ book.id }}&page={{ current_page - 1 }}"
+    class="btn btn-secondary me-2"
+    >« Назад</a
+  >
+  {% endif %}
+  <span class="align-self-center"
+    >Страница {{ current_page }} из {{ total_pages }}</span
+  >
+  {% if current_page < total_pages %}
+  <a
+    href="/catalog/read?book_id={{ book.id }}&page={{ current_page + 1 }}"
+    class="btn btn-secondary ms-2"
+    >Вперед »</a
+  >
+  {% endif %}
+</div>
+{% endif %} {% endblock content %}

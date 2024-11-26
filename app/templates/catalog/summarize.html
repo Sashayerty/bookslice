@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="summarize container shadow-lg border border-2 rounded-4 my-5 p-5">
+    {% if book %}
+    <p class="fs-2 fw-semibold text-center mb-5">
+        Сжать {{ book.title }}
+    </p>
+    {% else %}
+    <p class="fs-2 fw-semibold mb-5">
+        Сжать текст
+    </p>
+    {% endif %}
+    <form action="" method="post">
+        {% if book %}
+        {% else %}
+        <p>
+            {{ form.text(
+            class="form-control focus-ring focus-ring-dark text-decoration-none border border-2 shadow-lg rounded-2",
+            placeholder="Введите максимум е+6 символов..."
+            ) }}
+        </p>
+        {% for error in form.text.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        {% endif %}
+        <div class="my-5 col d-flex align-items-center">
+            {{ form.type_of_sum(class="fs-4 fw-semibold") }}
+        </div>
+        <p class="col text-center d-grid gap-2">{{ form.submit(
+            type="submit",
+            class="btn btn-secondary shadow-lg mt-2")
+            }}</p>
+        {{ form.hidden_tag() }}
+    </form>
+</div>
+{% endblock content %}

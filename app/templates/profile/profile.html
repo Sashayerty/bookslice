@@ -1,0 +1,67 @@
+{% extends "base.html" %} {% block content %}
+<div class="profile container d-flex flex-column align-items-center mt-5">
+  <div class="container border shadow rounded-4 p-4">
+    <ul class="nav nav-underline mb-3">
+      <li class="nav-item">
+        <a
+          class="nav-link {% if data %}active{% endif %}"
+          href="/profile/{{ id }}?page=data"
+          >Данные</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link {% if read_data %}active{% endif %}"
+          href="/profile/{{ id }}?page=stats"
+          >Статистика</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link {% if ach %}active{% endif %}"
+          href="/profile/{{ id }}?page=achievements"
+          >Достижения</a
+        >
+      </li>
+    </ul>
+    <hr class="m-0 mb-3" />
+    <div id="profile-data-box" class="container my-2">
+      {% if data %}
+      <p class="m-0 my-1 fs-5">id: {{ id }}</p>
+      <p class="m-0 my-1 fs-5">Имя: {{ name }}</p>
+      <p class="m-0 my-1 fs-5">Почта: {{ email }}</p>
+      {% endif %} {% if read_data %}
+      <p class="m-0 my-1 fs-5">Прочитано книг: {{ read_books }}</p>
+      <p class="m-0 my-1 fs-5">Прочитано страниц: {{ read_pages }}</p>
+      <p class="m-0 my-1 fs-5">Сжато книг: {{ summarized_books }}</p>
+      {% if speed_of_reading %}
+      <div class="speed-box row align-items-center my-2">
+        <div class="col">
+          <p class="speed fs-5 m-0">
+            Скорость чтения: {{ speed_of_reading }} сл/мин
+          </p>
+        </div>
+        <div class="col-auto">
+          {% if current_user %}
+          <a href="/profile/check-speed-of-reading" class="btn btn-secondary"
+            >Проверить скорость чтения</a
+          >
+          {% endif %}
+        </div>
+      </div>
+      {% else %} {% if current_user %}
+      <a href="/profile/check-speed-of-reading" class="btn btn-secondary"
+        >Проверить скорость чтения</a
+      >
+      {% endif %} {% endif %} {% endif %} {% if ach %} {% if achievements %} {%
+      for achievement in achievements %}
+      <p class="m-0 my-1 fs-5">
+        {{ achievement.title }} - {{ achievement.description }}
+      </p>
+      {% endfor %} {% else %}
+      <p class="m-0 my-1 fs-5">Нет достижений.</p>
+      {% endif %} {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

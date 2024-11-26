@@ -1,13 +1,12 @@
 from flask import Blueprint, redirect, render_template
 from flask_login import current_user, login_required, login_user, logout_user
 
-from app.models import Users, db_session
+from app.models import Notifications, Users, db_session
 from app.static.forms import LoginForm, RegisterForm
 from app.static.forms.chat import ChatForm
 
 from .friends_model import friends as f
 from .functions.AI import AI
-from .notifications_model import notifications1, notifications2
 
 bookslice = Blueprint(
     "bookslice",
@@ -261,13 +260,24 @@ def accept_friend_request(user_id: int):
 )
 def notifications():
     """Отображение уведомлений юзера"""
+    notifications_list = (
+        db_ses.query(Notifications).filter_by(user_id=current_user.id).all()
+    )
+    print(notifications_list)
     return render_template(
         "notifications.html",
         title="Уведомления",
         user_is_auth=current_user.is_authenticated,
         admin=(current_user.admin if current_user.is_authenticated else False),
-        notifications_list=[
-            notifications1,
-            notifications2,
-        ],
+        notifications_list=notifications_list,
     )
+
+
+@bookslice.route(
+    "/notification-read/<int:notification_id>", methods=["GET", "POST"]
+)
+def notification_read(notification_id):
+    notification = db_ses.query(Notifications).filter_by(id=notification_id)
+    notification.delete()
+    db_ses.commit()
+    return redirect("/notifications")

@@ -19,7 +19,6 @@ class Notifications(SqlAlchemyBase):
     user_id = sqlalchemy.Column(
         sqlalchemy.Integer,
         nullable=False,
-        unique=True,
     )
     data = sqlalchemy.Column(
         sqlalchemy.String,

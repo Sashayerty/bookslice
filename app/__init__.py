@@ -13,6 +13,7 @@ from .admin import (
     BooksOfUserView,
     BooksView,
     GenresView,
+    NotificationsView,
     TextOfBookView,
     UsersView,
     get_locale,
@@ -24,6 +25,7 @@ from .models import (
     Books,
     BooksOfUser,
     Genres,
+    Notifications,
     TextOfBook,
     Users,
     db_session,
@@ -95,6 +97,12 @@ def create_app():
             db_ses,
             name="Ачивки юзеров",
             category="Модели",
+        ),
+        NotificationsView(
+            Notifications,
+            db_ses,
+            name="Уведомления",
+            category="Друзья",
         ),
     )
     login_manager = LoginManager()

@@ -8,6 +8,7 @@ on:
     - datascientists
     - alex
     - vanya
+    - features
 
 jobs:
   build:

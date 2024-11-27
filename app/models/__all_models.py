@@ -4,7 +4,6 @@ from . import (
     authors,
     books,
     books_of_user,
-    description_of_user,
     friend_requests,
     friendships,
     genres,

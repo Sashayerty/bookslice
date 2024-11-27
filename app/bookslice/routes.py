@@ -2,10 +2,10 @@ from flask import Blueprint, redirect, render_template
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app.models import Notifications, Users, db_session
+from app.models.friendships import Friendships
 from app.static.forms import LoginForm, RegisterForm
 from app.static.forms.chat import ChatForm
 
-from .friends_model import friends as f
 from .functions.AI import AI
 
 bookslice = Blueprint(
@@ -202,12 +202,18 @@ def ask():
 @login_required
 def friends():
     """Страница с друзьями"""
+    friends_of_user = (
+        db_ses.query(Friendships)
+        .filter_by(user_id=current_user.id)
+        .first()
+        .split(", ")
+    )
     return render_template(
         "friends.html",
         title="Друзья",
         user_is_auth=current_user.is_authenticated,
         admin=(current_user.admin if current_user.is_authenticated else False),
-        friends=f,
+        friends=friends_of_user,
     )
 
 

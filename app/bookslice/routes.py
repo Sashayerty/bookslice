@@ -251,13 +251,50 @@ def friends():
 def add_friend(user_id: int):
     """Добавление в друзья"""
     users_requests_to_friends = (
-        db_ses.query(FriendRequests)
-        .filter_by(user_id=user_id)
-        .first()
-        .friends_ids.split(", ")
+        db_ses.query(FriendRequests).filter_by(user_id=user_id).first()
     )
-    if str(user_id) not in users_requests_to_friends:
-        users_requests_to_friends.append(str(user_id)).sort()
+    users_notifications_of_requests_to_friends = (
+        db_ses.query(Notifications).filter_by(user_id=user_id).all()
+    )
+    if users_notifications_of_requests_to_friends:
+        if users_notifications_of_requests_to_friends.friends_ids:
+            if str(
+                current_user.id
+            ) in users_notifications_of_requests_to_friends.friends_ids.split(
+                ", "
+            ):
+                return redirect("/friends")
+            else:
+                pass
+    else:
+        pass
+    if users_requests_to_friends:
+        pass
+    else:
+        pass
+    # if users_requests_to_friends:
+    #     list_of_users_requests_to_friends = (
+    #         users_requests_to_friends.friends_ids.split(", ")
+    #     )
+    # else:
+    #     list_of_users_requests_to_friends = []
+    # if str(user_id) not in list_of_users_requests_to_friends:
+    #     list_of_users_requests_to_friends.append(str(user_id))
+    #     list_of_users_requests_to_friends.sort()
+    #     if db_ses.query(Notifications).filter_by(
+    #         user_id=user_id, data=current_user.id
+    #     ):
+    #         return redirect("/friends")
+    #     else:
+    #         notification_of_friend_request = Notifications(
+    #             type="friendrequest",
+    #             user_id=user_id,
+    #             data=current_user.id,
+    #         )
+    #         db_ses.add(notification_of_friend_request)
+    #     db_ses.commit()
+    # else:
+    #     return redirect("/friends")
     # ? ! Додумать эту хрень наконец-то
     return redirect("/friends")
 

@@ -19,5 +19,5 @@ class FriendRequests(SqlAlchemyBase):
     )
     friends_ids = sqlalchemy.Column(
         sqlalchemy.String,
-        nullable=False,
+        nullable=True,
     )

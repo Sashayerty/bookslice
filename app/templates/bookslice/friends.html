@@ -4,7 +4,7 @@
     <div class="container fs-3 mb-3">Друзья</div>
     <form class="d-flex justify-content-between" action="/friends" method="get">
         <input class="form-control me-2 focus-ring focus-ring-dark text-decoration-none border rounded-2" type="text"
-            name="search" placeholder="Поиск по id или имени" />
+            name="search" placeholder="Поиск по имени" />
         <button class="btn btn-secondary" type="submit">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search"
                 viewBox="0 0 16 16">
@@ -13,15 +13,28 @@
             </svg>
         </button>
     </form>
+    {% if friends %}
     {% for i in friends %}
     <div class="container border shadow rounded-2 p-3 my-2 d-flex align-items-center justify-content-between">
         {{ i.id }}
         {{ i.name }}
         <div class="align-self-end">
-            <a class="btn btn-outline-secondary" href="/add-friend/{{ i.id }}">Отправить запрос в друзья</a>
             <a class="btn btn-outline-secondary" href="/delete-friend/{{ i.id }}">Удалить из друзей</a>
         </div>
     </div>
     {% endfor %}
+    {% elif searched_users %}
+    {% for i in searched_users %}
+    <div class="container border shadow rounded-2 p-3 my-2 d-flex align-items-center justify-content-between">
+        {{ i.id }}
+        {{ i.name }}
+        <div class="align-self-end">
+            <a class="btn btn-outline-secondary" href="/add-friend/{{ i.id }}">Отправить запрос в друзья</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="fs-2 text-start fw-medium my-5">Ничего не найдено по запросу {{ search }}.</p>
+    {% endif %}
 </div>
 {% endblock content %}

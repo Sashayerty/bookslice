@@ -1,7 +1,9 @@
-from flask import Blueprint, redirect, render_template
+from flask import Blueprint, redirect, render_template, request
 from flask_login import current_user, login_required, login_user, logout_user
 
+from app.bookslice.functions.search_friends import search_partial_match_fuzzy
 from app.models import Notifications, Users, db_session
+from app.models.friend_requests import FriendRequests
 from app.models.friendships import Friendships
 from app.static.forms import LoginForm, RegisterForm
 from app.static.forms.chat import ChatForm
@@ -202,18 +204,39 @@ def ask():
 @login_required
 def friends():
     """Страница с друзьями"""
-    friends_of_user = (
-        db_ses.query(Friendships)
-        .filter_by(user_id=current_user.id)
-        .first()
-        .split(", ")
-    )
+    search = request.args.get("search", type=str, default=None)
+    if search:
+        friends_of_user = []
+        all_users = db_ses.query(Users)
+        users_names = [i.name for i in all_users.all()]
+        searched_users = list(
+            set(search_partial_match_fuzzy(users_names, search))
+        )
+        searched_users_models = []
+        for i in searched_users:
+            searched_users_models.extend(all_users.filter_by(name=i).all())
+            searched_users_models = set(searched_users_models)
+    else:
+        searched_users_models = []
+        friends_of_user_ids = (
+            db_ses.query(Friendships)
+            .filter_by(user_id=current_user.id)
+            .first()
+        )
+        friends_of_user = []
+        if friends_of_user_ids:
+            for i in friends_of_user_ids.friends_ids.split(", "):
+                friends_of_user.append(
+                    db_ses.query(Users).filter_by(id=int(i)).first()
+                )
     return render_template(
         "friends.html",
         title="Друзья",
         user_is_auth=current_user.is_authenticated,
         admin=(current_user.admin if current_user.is_authenticated else False),
         friends=friends_of_user,
+        searched_users=searched_users_models,
+        search=search,
     )
 
 
@@ -227,7 +250,15 @@ def friends():
 @login_required
 def add_friend(user_id: int):
     """Добавление в друзья"""
-    # ! Здесь логика для функции по добавлению друзей!
+    users_requests_to_friends = (
+        db_ses.query(FriendRequests)
+        .filter_by(user_id=user_id)
+        .first()
+        .friends_ids.split(", ")
+    )
+    if str(user_id) not in users_requests_to_friends:
+        users_requests_to_friends.append(str(user_id)).sort()
+    # ? ! Додумать эту хрень наконец-то
     return redirect("/friends")
 
 
@@ -254,7 +285,19 @@ def delete_friend(user_id: int):
 @login_required
 def accept_friend_request(user_id: int):
     """Принятие запроса в друзья"""
-    pass
+    friend_requests = (
+        db_ses.query(FriendRequests)
+        .filter_by(user_id=current_user.id)
+        .first()
+        .friends_ids.split(", ")
+    )
+    if str(user_id) in friend_requests and user_id != current_user.id:
+        db_ses.query(Friendships).filter_by(
+            user_id=current_user.id
+        ).first().friends_ids += ", " + str(user_id)
+        return redirect("/notifications")
+    else:
+        return redirect("/not-found")
 
 
 @bookslice.route(

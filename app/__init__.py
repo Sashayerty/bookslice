@@ -4,7 +4,11 @@ from flask_babel import Babel
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager
 
+from app.admin.views.friend_requests import FriendRequestsView
+from app.admin.views.friendships_view import FriendshipsView
 from app.config import config
+from app.models.friend_requests import FriendRequests
+from app.models.friendships import Friendships
 
 from .admin import (
     AchievementsOfUsersView,
@@ -98,11 +102,23 @@ def create_app():
             name="Ачивки юзеров",
             category="Модели",
         ),
+        FriendRequestsView(
+            FriendRequests,
+            db_ses,
+            name="Запросы в друзья",
+            category="Друзья",
+        ),
+        FriendshipsView(
+            Friendships,
+            db_ses,
+            name="Дружеские отношения",
+            category="Друзья",
+        ),
         NotificationsView(
             Notifications,
             db_ses,
             name="Уведомления",
-            category="Друзья",
+            category="Модели",
         ),
     )
     login_manager = LoginManager()

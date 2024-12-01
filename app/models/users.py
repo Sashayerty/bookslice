@@ -45,9 +45,6 @@ class Users(SqlAlchemyBase, UserMixin):
     read_books = sqlalchemy.Column(
         sqlalchemy.Integer,
     )
-    read_pages = sqlalchemy.Column(
-        sqlalchemy.Integer,
-    )
     summarized_books = sqlalchemy.Column(
         sqlalchemy.Integer,
     )

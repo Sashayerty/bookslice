@@ -365,6 +365,9 @@ def summarize_by_id():
                     text = split_into_pages(
                         summarize_text(text_of_book, "strong")
                     )
+                    user = db_ses.query(Users).get(current_user.id)
+                    user.summarized_books = (user.summarized_books or 0) + 1
+                    db_ses.commit()
                     return render_template(
                         "read_book.html",
                         summarizing=True,
@@ -389,6 +392,9 @@ def summarize_by_id():
                         .text
                     )
                     text = split_into_pages(summarize_text(text_of_book))
+                    user = db_ses.query(Users).get(current_user.id)
+                    user.summarized_books = (user.summarized_books or 0) + 1
+                    db_ses.commit()
                     return render_template(
                         "read_book.html",
                         summarizing=True,

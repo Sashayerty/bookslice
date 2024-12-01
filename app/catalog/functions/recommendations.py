@@ -15,7 +15,7 @@ def recommendations(
     authors: list[int] = None,
     genres: list[int] = None,
     read_books: list[int] = [],
-) -> set[int] | None:
+) -> set[int]:
     """Функция для рекомендаций пользователю.
 
     Args:

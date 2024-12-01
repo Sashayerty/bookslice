@@ -1,9 +1,11 @@
 from flask import Blueprint, redirect, render_template, request
 from flask_login import current_user, login_required, login_user, logout_user
 
+from app.bookslice.functions.notification_sender import (
+    send_to_user_friend_request_notification,
+)
 from app.bookslice.functions.search_friends import search_partial_match_fuzzy
 from app.models import Notifications, Users, db_session
-from app.models.friend_requests import FriendRequests
 from app.models.friendships import Friendships
 from app.static.forms import LoginForm, RegisterForm
 from app.static.forms.chat import ChatForm
@@ -208,7 +210,9 @@ def friends():
     if search:
         friends_of_user = []
         all_users = db_ses.query(Users)
-        users_names = [i.name for i in all_users.all()]
+        users_names = [
+            i.name for i in all_users.filter(Users.id != current_user.id).all()
+        ]
         searched_users = list(
             set(search_partial_match_fuzzy(users_names, search))
         )
@@ -218,14 +222,15 @@ def friends():
             searched_users_models = set(searched_users_models)
     else:
         searched_users_models = []
-        friends_of_user_ids = (
-            db_ses.query(Friendships)
+        friends_of_user_ids = [
+            i.id
+            for i in db_ses.query(Friendships)
             .filter_by(user_id=current_user.id)
-            .first()
-        )
+            .all()
+        ]
         friends_of_user = []
         if friends_of_user_ids:
-            for i in friends_of_user_ids.friends_ids.split(", "):
+            for i in friends_of_user_ids:
                 friends_of_user.append(
                     db_ses.query(Users).filter_by(id=int(i)).first()
                 )
@@ -250,52 +255,12 @@ def friends():
 @login_required
 def add_friend(user_id: int):
     """Добавление в друзья"""
-    users_requests_to_friends = (
-        db_ses.query(FriendRequests).filter_by(user_id=user_id).first()
+
+    send_to_user_friend_request_notification(
+        user_id=current_user.id,
+        data=str(user_id),
+        db_session=db_ses,
     )
-    users_notifications_of_requests_to_friends = (
-        db_ses.query(Notifications).filter_by(user_id=user_id).all()
-    )
-    if users_notifications_of_requests_to_friends:
-        if users_notifications_of_requests_to_friends.friends_ids:
-            if str(
-                current_user.id
-            ) in users_notifications_of_requests_to_friends.friends_ids.split(
-                ", "
-            ):
-                return redirect("/friends")
-            else:
-                pass
-    else:
-        pass
-    if users_requests_to_friends:
-        pass
-    else:
-        pass
-    # if users_requests_to_friends:
-    #     list_of_users_requests_to_friends = (
-    #         users_requests_to_friends.friends_ids.split(", ")
-    #     )
-    # else:
-    #     list_of_users_requests_to_friends = []
-    # if str(user_id) not in list_of_users_requests_to_friends:
-    #     list_of_users_requests_to_friends.append(str(user_id))
-    #     list_of_users_requests_to_friends.sort()
-    #     if db_ses.query(Notifications).filter_by(
-    #         user_id=user_id, data=current_user.id
-    #     ):
-    #         return redirect("/friends")
-    #     else:
-    #         notification_of_friend_request = Notifications(
-    #             type="friendrequest",
-    #             user_id=user_id,
-    #             data=current_user.id,
-    #         )
-    #         db_ses.add(notification_of_friend_request)
-    #     db_ses.commit()
-    # else:
-    #     return redirect("/friends")
-    # ? ! Додумать эту хрень наконец-то
     return redirect("/friends")
 
 
@@ -309,7 +274,13 @@ def add_friend(user_id: int):
 @login_required
 def delete_friend(user_id: int):
     """Удаление из друзей"""
-    # ! Здесь логика для функции по удалению друзей!
+    db_ses.query(Friendships).filter_by(
+        user_id=current_user.id, friends_ids=user_id
+    ).delete()
+    db_ses.query(Friendships).filter_by(
+        user_id=user_id, friends_ids=current_user.id
+    ).delete()
+    db_ses.commit()
     return redirect("/friends")
 
 
@@ -317,24 +288,56 @@ def delete_friend(user_id: int):
     "/accept-friend-request/<int:user_id>",
     methods=[
         "POST",
+        "GET",
     ],
 )
 @login_required
 def accept_friend_request(user_id: int):
     """Принятие запроса в друзья"""
-    friend_requests = (
-        db_ses.query(FriendRequests)
-        .filter_by(user_id=current_user.id)
-        .first()
-        .friends_ids.split(", ")
+    friendships = (
+        db_ses.query(Friendships).filter_by(user_id=current_user.id).all()
     )
-    if str(user_id) in friend_requests and user_id != current_user.id:
-        db_ses.query(Friendships).filter_by(
-            user_id=current_user.id
-        ).first().friends_ids += ", " + str(user_id)
-        return redirect("/notifications")
-    else:
-        return redirect("/not-found")
+    for i in friendships:
+        if i.friends_ids == user_id:
+            db_ses.query(Notifications).filter_by(
+                user_id=current_user.id,
+                data=user_id,
+                type="friendrequest",
+            ).delete()
+            db_ses.commit()
+            return redirect("/notifications")
+    friend_to_friend, friend_to_current_user = (
+        Friendships(
+            user_id=user_id,
+            friends_ids=current_user.id,
+        ),
+        Friendships(
+            user_id=current_user.id,
+            friends_ids=user_id,
+        ),
+    )
+    db_ses.add(friend_to_current_user)
+    db_ses.add(friend_to_friend)
+    db_ses.query(Notifications).filter_by(
+        user_id=current_user.id,
+        data=user_id,
+        type="friendrequest",
+    ).delete()
+    db_ses.commit()
+    return redirect("/notifications")
+
+
+@bookslice.route("/dismiss-friend-request/<int:user_id>")
+@login_required
+def dismiss_friend_request(user_id):
+    """Функция отказа от запроса в друзья"""
+    db_ses.query(Notifications).filter_by(
+        user_id=current_user.id,
+        data=user_id,
+        type="friendrequest",
+    ).delete()
+    db_ses.commit()
+    return redirect("/notifications")
 
 
 @bookslice.route(

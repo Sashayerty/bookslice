@@ -4,20 +4,28 @@
     <p class="fs-3">
         Уведомления
     </p>
+    {% if notifications_list %}
     {% for notification in notifications_list %}
     <div class="container border rounded p-3 my-2 d-flex align-items-center justify-content-between">
-        {{ notification.data }}
         {% if notification.type == "friendrequest" %}
+        <p class="p-0 m-0">Вам новый <a class="link-dark" href="/profile/{{ notification.data }}">запрос</a> в
+            друзья
+        </p>
         <div class="align-self-end p-0">
-            <a class="btn btn-outline-secondary m-0" href="#">Добавить</a>
-            <a class="btn btn-outline-secondary m-0" href="#">Отклонить</a>
+            <a class="btn btn-outline-secondary m-0" href="/accept-friend-request/{{ notification.data }}">Добавить</a>
+            <a class="btn btn-outline-secondary m-0"
+                href="/dismiss-friend-request/{{ notification.data }}">Отклонить</a>
         </div>
         {% elif notification.type == "system" %}
+        {{ notification.data }}
         <a href="/notification-read/{{ notification.id }}" class="btn btn-outline-secondary">
             Прочитано
         </a>
         {% endif %}
     </div>
     {% endfor %}
+    {% else %}
+    <p class="text-center p-0 m-0 mt-4">У вас нет уведомлений.</p>
+    {% endif %}
 </div>
 {% endblock content %}

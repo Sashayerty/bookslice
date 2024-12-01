@@ -14,10 +14,10 @@
         </button>
     </form>
     {% if friends %}
+    <p class="fs-4 p-0 m-0 mt-2">Ваши друзья:</p>
     {% for i in friends %}
     <div class="container border shadow rounded-2 p-3 my-2 d-flex align-items-center justify-content-between">
-        {{ i.id }}
-        {{ i.name }}
+        <a class="link-dark" href="/profile/{{ i.id }}">{{ i.name }}</a>
         <div class="align-self-end">
             <a class="btn btn-outline-secondary" href="/delete-friend/{{ i.id }}">Удалить из друзей</a>
         </div>
@@ -26,8 +26,7 @@
     {% elif searched_users %}
     {% for i in searched_users %}
     <div class="container border shadow rounded-2 p-3 my-2 d-flex align-items-center justify-content-between">
-        {{ i.id }}
-        {{ i.name }}
+        <a class="link-dark" href="/profile/{{ i.id }}">{{ i.name }}</a>
         <div class="align-self-end">
             <a class="btn btn-outline-secondary" href="/add-friend/{{ i.id }}">Отправить запрос в друзья</a>
         </div>

@@ -4,7 +4,6 @@ from .achievements_of_users import AchievementsOfUsers
 from .authors import Authors
 from .books import Books
 from .books_of_user import BooksOfUser
-from .friend_requests import FriendRequests
 from .friendships import Friendships
 from .genres import Genres
 from .notifications import Notifications
@@ -22,6 +21,5 @@ __all__ = [
     "AchievementsOfUsers",
     "db_session",
     "Notifications",
-    "FriendRequests",
     "Friendships",
 ]

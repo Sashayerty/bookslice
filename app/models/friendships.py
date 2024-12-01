@@ -15,9 +15,9 @@ class Friendships(SqlAlchemyBase):
     user_id = sqlalchemy.Column(
         sqlalchemy.Integer,
         nullable=False,
-        unique=True,
+        unique=False,
     )
     friends_ids = sqlalchemy.Column(
-        sqlalchemy.String,
+        sqlalchemy.Integer,
         nullable=True,
     )

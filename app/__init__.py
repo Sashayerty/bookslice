@@ -7,7 +7,6 @@ from flask_login import LoginManager
 from app.admin.views.friend_requests import FriendRequestsView
 from app.admin.views.friendships_view import FriendshipsView
 from app.config import config
-from app.models.friend_requests import FriendRequests
 from app.models.friendships import Friendships
 
 from .admin import (
@@ -101,12 +100,6 @@ def create_app():
             db_ses,
             name="Ачивки юзеров",
             category="Модели",
-        ),
-        FriendRequestsView(
-            FriendRequests,
-            db_ses,
-            name="Запросы в друзья",
-            category="Друзья",
         ),
         FriendshipsView(
             Friendships,

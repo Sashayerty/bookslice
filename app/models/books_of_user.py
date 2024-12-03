@@ -21,6 +21,6 @@ class BooksOfUser(SqlAlchemyBase):
         nullable=False,
     )
     status = sqlalchemy.Column(
-        sqlalchemy.Integer,
+        sqlalchemy.String,
         nullable=False,
     )

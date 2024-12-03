@@ -6,6 +6,8 @@ from flask_login import current_user, login_required
 from app.models import db_session
 from app.models.achievements import Achievements
 from app.models.achievements_of_users import AchievementsOfUsers
+from app.models.books import Books
+from app.models.books_of_user import BooksOfUser
 from app.models.users import Users
 
 profile = Blueprint(
@@ -34,6 +36,21 @@ def get_user_data(user):
 @profile.route("/", methods=["GET", "POST"])
 @login_required
 def index():
+    read_books_ids = [
+        i.book_id
+        for i in db_ses.query(BooksOfUser)
+        .filter_by(user_id=current_user.id, status="Прочитал")
+        .all()
+    ]
+    all_books = db_ses.query(Books)
+    if read_books_ids:
+        read_books_names = []
+        for i in read_books_ids:
+            read_books_names.append(
+                (i, all_books.filter_by(id=i).first().title)
+            )
+    else:
+        read_books_names = False
     page = request.args.get("page", type=str, default="data")
     if page not in ["data", "achievements", "stats"]:
         return redirect("/not-found")
@@ -78,7 +95,7 @@ def index():
         return render_template(
             "profile.html",
             title="Профиль",
-            read_books=current_user.read_books or 0,
+            read_books=read_books_names,
             summarized_books=current_user.summarized_books or 0,
             speed_of_reading=current_user.speed_of_reading,
             read_data=True,
@@ -102,6 +119,23 @@ def check_speed_of_reading():
 @profile.route("/<int:user_id>", methods=["GET", "POST"])
 @login_required
 def profile_of_user(user_id: int):
+    read_books_ids = [
+        i.book_id
+        for i in db_ses.query(BooksOfUser)
+        .filter_by(user_id=user_id, status="Прочитал")
+        .all()
+    ]
+    print(read_books_ids)
+    all_books = db_ses.query(Books)
+    print(all_books)
+    if read_books_ids:
+        read_books_names = []
+        for i in read_books_ids:
+            read_books_names.append(
+                (i, all_books.filter_by(id=i).first().title)
+            )
+    else:
+        read_books_names = False
     page = request.args.get("page", type=str, default="data")
     user = db_ses.query(Users).filter_by(id=user_id).first()
     if not user or page not in ["data", "achievements", "stats"]:
@@ -145,7 +179,7 @@ def profile_of_user(user_id: int):
         return render_template(
             "profile.html",
             title=user.name,
-            read_books=user.read_books or 0,
+            read_books=read_books_names,
             summarized_books=user.summarized_books or 0,
             speed_of_reading=user.speed_of_reading,
             read_data=True,

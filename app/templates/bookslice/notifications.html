@@ -17,7 +17,8 @@
                 href="/dismiss-friend-request/{{ notification.data }}">Отклонить</a>
         </div>
         {% elif notification.type == "system" %}
-        {{ notification.data }}
+        <a class="link-body-emphasis link-offset-1 text-body" href="/profile?page=achievements">{{ notification.data
+            }}</a>
         <a href="/notification-read/{{ notification.id }}" class="btn btn-outline-secondary">
             Прочитано
         </a>

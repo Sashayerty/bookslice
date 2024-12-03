@@ -209,9 +209,19 @@ def friends():
     search = request.args.get("search", type=str, default=None)
     if search:
         friends_of_user = []
+        users_friends = [
+            i.id
+            for i in db_ses.query(Friendships)
+            .filter_by(user_id=current_user.id)
+            .all()
+        ]
+        users_friends.append(current_user.id)
         all_users = db_ses.query(Users)
         users_names = [
-            i.name for i in all_users.filter(Users.id != current_user.id).all()
+            i.name
+            for i in all_users.filter(
+                Users.id != current_user.id, Users.id not in users_friends
+            ).all()
         ]
         searched_users = list(
             set(search_partial_match_fuzzy(users_names, search))
@@ -223,7 +233,7 @@ def friends():
     else:
         searched_users_models = []
         friends_of_user_ids = [
-            i.id
+            i.friends_ids
             for i in db_ses.query(Friendships)
             .filter_by(user_id=current_user.id)
             .all()

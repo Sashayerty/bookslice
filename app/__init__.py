@@ -2,7 +2,7 @@ from flask import Flask, redirect, render_template, url_for
 from flask_admin import Admin, AdminIndexView
 from flask_babel import Babel
 from flask_debugtoolbar import DebugToolbarExtension
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 from app.admin.views.friend_requests import FriendRequestsView
 from app.admin.views.friendships_view import FriendshipsView
@@ -39,8 +39,8 @@ def create_app():
 
     app = Flask(__name__)
     app.config.from_object(config)
-    if app.config["DEBUG"]:
-        fdtb = DebugToolbarExtension(app=app)
+    # if app.config["DEBUG"]:
+    #     fdtb = DebugToolbarExtension(app=app)
     db_session.global_init(config.DATABASE_URI)
     db_ses = db_session.create_session()
     admin_panel = Admin(
@@ -121,10 +121,29 @@ def create_app():
         locale_selector=get_locale,
     )
 
+    def get_notifications() -> int:
+        if current_user.is_authenticated:
+            try:
+                count_of_notifications = len(
+                    db_ses.query(Notifications)
+                    .filter_by(user_id=current_user.id)
+                    .all()
+                )
+            except Exception:
+                count_of_notifications = 0
+        else:
+            count_of_notifications = 0
+        return count_of_notifications
+
     @login_manager.user_loader
     def load_user(user_id):
         """Загрузка юзера"""
         return db_ses.query(Users).get(user_id)
+
+    @app.context_processor
+    def inject_common_variables():
+        notifications = get_notifications()
+        return dict(notifications=notifications)
 
     @app.route("/unauthorized")
     def unauthorized():

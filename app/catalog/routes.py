@@ -14,6 +14,9 @@ from app.models import (
     Users,
     db_session,
 )
+from app.models.achievements import Achievements
+from app.models.achievements_of_users import AchievementsOfUsers
+from app.models.notifications import Notifications
 from app.static.forms.sum_by_id_form import SumByIdForm
 from app.static.forms.sum_form import SumForm
 
@@ -301,6 +304,8 @@ def add_book_to_wishlist():
 @login_required
 def mark_as_read():
     """Помечает книгу как прочитанную"""
+    achievements = db_ses.query(Achievements).all()
+    user_achievements = db_ses.query(AchievementsOfUsers)
     book_id = request.args.get("book_id", default=None, type=int)
     book = db_ses.query(Books).get(book_id)
     if book:
@@ -319,6 +324,26 @@ def mark_as_read():
 
         user = db_ses.query(Users).get(current_user.id)
         user.read_books = (user.read_books or 0) + 1
+        for i in achievements:
+            if user.read_books >= i.condition and i.type == "books":
+                users_achievement_with_current_id = (
+                    user_achievements.filter_by(achievement_id=i.id)
+                ).first()
+                print(users_achievement_with_current_id)
+                if users_achievement_with_current_id:
+                    continue
+                else:
+                    achievement = AchievementsOfUsers(
+                        user_id=current_user.id,
+                        achievement_id=i.id,
+                    )
+                    db_ses.add(achievement)
+                    notification = Notifications(
+                        type="system",
+                        user_id=current_user.id,
+                        data=f"Вы получили достижение '{i.title}'",
+                    )
+                    db_ses.add(notification)
         db_ses.commit()
         return redirect(f"/catalog/{book_id}")
     return redirect_not_found()
@@ -347,6 +372,8 @@ def test_by_book():
 @login_required
 def summarize_by_id():
     """Страница сжатия книги"""
+    achievements = db_ses.query(Achievements).all()
+    user_achievements = db_ses.query(AchievementsOfUsers)
     book_id = request.args.get("book_id", default=None, type=int)
     form = SumByIdForm() if book_id else SumForm()
 
@@ -367,6 +394,31 @@ def summarize_by_id():
                     )
                     user = db_ses.query(Users).get(current_user.id)
                     user.summarized_books = (user.summarized_books or 0) + 1
+                    for i in achievements:
+                        if (
+                            user.read_books >= i.condition
+                            and i.type == "summarized_books"
+                        ):
+                            users_achievement_with_current_id = (
+                                user_achievements.filter_by(
+                                    achievement_id=i.id
+                                )
+                            ).first()
+                            print(users_achievement_with_current_id)
+                            if users_achievement_with_current_id:
+                                continue
+                            else:
+                                achievement = AchievementsOfUsers(
+                                    user_id=current_user.id,
+                                    achievement_id=i.id,
+                                )
+                                db_ses.add(achievement)
+                                notification = Notifications(
+                                    type="system",
+                                    user_id=current_user.id,
+                                    data=f"Вы получили достижение '{i.title}'",
+                                )
+                                db_ses.add(notification)
                     db_ses.commit()
                     return render_template(
                         "read_book.html",
@@ -394,6 +446,31 @@ def summarize_by_id():
                     text = split_into_pages(summarize_text(text_of_book))
                     user = db_ses.query(Users).get(current_user.id)
                     user.summarized_books = (user.summarized_books or 0) + 1
+                    for i in achievements:
+                        if (
+                            user.read_books >= i.condition
+                            and i.type == "summarized_books"
+                        ):
+                            users_achievement_with_current_id = (
+                                user_achievements.filter_by(
+                                    achievement_id=i.id
+                                )
+                            ).first()
+                            print(users_achievement_with_current_id)
+                            if users_achievement_with_current_id:
+                                continue
+                            else:
+                                achievement = AchievementsOfUsers(
+                                    user_id=current_user.id,
+                                    achievement_id=i.id,
+                                )
+                                db_ses.add(achievement)
+                                notification = Notifications(
+                                    type="system",
+                                    user_id=current_user.id,
+                                    data=f"Вы получили достижение '{i.title}'",
+                                )
+                                db_ses.add(notification)
                     db_ses.commit()
                     return render_template(
                         "read_book.html",

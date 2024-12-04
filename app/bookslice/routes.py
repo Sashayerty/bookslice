@@ -5,6 +5,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    send_file,
 )
 from flask_login import current_user, login_required, login_user, logout_user
 
@@ -30,6 +31,13 @@ bookslice = Blueprint(
 db_session.global_init("../app.db")
 db_ses = db_session.create_session()
 ai = AI()
+
+
+@bookslice.route("/conditions-of-using")
+def conditions_of_using():
+    return send_file(
+        "./static/conditions_of_using/Условия_использования_BookSlice.pdf"
+    )
 
 
 @bookslice.route("/")

@@ -18,6 +18,9 @@ class SumForm(FlaskForm):
         choices=["Сильное сжатие", "Слабое сжатие"],
         validators=[DataRequired()],
     )
+    # upload_pdf_file = FileField(
+    #     "Загрузчик pdf",
+    # )
     submit = SubmitField(
         "Сжать",
     )

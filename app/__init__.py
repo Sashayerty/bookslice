@@ -4,9 +4,11 @@ from flask_babel import Babel
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager, current_user
 
+from app.admin.views.bookmarks_view import BookMarksView
 from app.admin.views.friend_requests import FriendRequestsView
 from app.admin.views.friendships_view import FriendshipsView
 from app.config import config
+from app.models.bookmarks import BookMarks
 from app.models.friendships import Friendships
 
 from .admin import (
@@ -112,6 +114,12 @@ def create_app():
             db_ses,
             name="Уведомления",
             category="Модели",
+        ),
+        BookMarksView(
+            BookMarks,
+            db_ses,
+            name="Закладки",
+            category="Книги",
         ),
     )
     login_manager = LoginManager()

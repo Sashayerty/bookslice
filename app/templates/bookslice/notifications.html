@@ -16,9 +16,14 @@
             <a class="btn btn-outline-secondary m-0"
                 href="/dismiss-friend-request/{{ notification.data }}">Отклонить</a>
         </div>
-        {% elif notification.type == "system" %}
+        {% elif notification.type == "system" and "Вы получили достижение" in notification.data %}
         <a class="link-body-emphasis link-offset-1 text-body" href="/profile?page=achievements">{{ notification.data
             }}</a>
+        <a href="/notification-read/{{ notification.id }}" class="btn btn-outline-secondary">
+            Прочитано
+        </a>
+        {% elif notification.type == "system" and "Вы получили достижение" not in notification.data %}
+        {{ notification.data}}
         <a href="/notification-read/{{ notification.id }}" class="btn btn-outline-secondary">
             Прочитано
         </a>

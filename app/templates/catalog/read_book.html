@@ -1,5 +1,24 @@
 {% extends "base.html" %} {% block content %}
 <div class="book-container container fs-4">
+  <div class="d-grid align-items-center justify-content-end">
+    {% if current_page != bookmark_page %}
+    <a class="btn btn-secondary" href="/catalog/add-bookmark?book_id={{ book.id }}&page={{ current_page }}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark"
+        viewBox="0 0 16 16">
+        <path
+          d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+      </svg>
+    </a>
+    {% else %}
+    <a class="btn btn-secondary" href="/catalog/delete-bookmark?book_id={{ book.id }}&page={{ current_page }}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill"
+        viewBox="0 0 16 16">
+        <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2" />
+      </svg>
+    </a>
+    {% endif %}
+  </div>
+
   {% if current_page == 1 %} {% if author %}
   <!-- Автор книги (если есть) -->
   <p class="text-center fs-1 fw-semibold my-4">{{ author }}</p>
@@ -8,7 +27,7 @@
   <p class="text-center fs-2 fw-semibold my-4">{{ book.title }}</p>
   {% endif %} {% endif %} {% if sum_text %}
   <p class="text-center fs-2 fw-semibold my-4">{{ sum_text }}</p>
-  {% endif %} {% for page in text_of_book %} {{ page[1] }} {% endfor %}
+  {% endif %} {% for page in text_of_book %} {{ page[1] | safe }} {% endfor %}
 </div>
 
 {% if not summarizing %}
@@ -24,21 +43,11 @@
 <!-- Пагинация -->
 <div class="pagination d-flex justify-content-center my-4">
   {% if current_page > 1 %}
-  <a
-    href="/catalog/read?book_id={{ book.id }}&page={{ current_page - 1 }}"
-    class="btn btn-secondary me-2"
-    >« Назад</a
-  >
+  <a href="/catalog/read?book_id={{ book.id }}&page={{ current_page - 1 }}" class="btn btn-secondary me-2">« Назад</a>
   {% endif %}
-  <span class="align-self-center"
-    >Страница {{ current_page }} из {{ total_pages }}</span
-  >
-  {% if current_page < total_pages %}
-  <a
-    href="/catalog/read?book_id={{ book.id }}&page={{ current_page + 1 }}"
-    class="btn btn-secondary ms-2"
-    >Вперед »</a
-  >
-  {% endif %}
+  <span class="align-self-center">Страница {{ current_page }} из {{ total_pages }}</span>
+  {% if current_page < total_pages %} <a href="/catalog/read?book_id={{ book.id }}&page={{ current_page + 1 }}"
+    class="btn btn-secondary ms-2">Вперед »</a>
+    {% endif %}
 </div>
 {% endif %} {% endblock content %}

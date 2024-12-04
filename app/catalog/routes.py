@@ -16,6 +16,7 @@ from app.models import (
 )
 from app.models.achievements import Achievements
 from app.models.achievements_of_users import AchievementsOfUsers
+from app.models.bookmarks import BookMarks
 from app.models.notifications import Notifications
 from app.static.forms.sum_by_id_form import SumByIdForm
 from app.static.forms.sum_form import SumForm
@@ -208,6 +209,41 @@ def sort_catalog_by_genre(genre_name: str):
     return redirect_not_found()
 
 
+@catalog.route(
+    "/bookmarks",
+    methods=[
+        "POST",
+        "GET",
+    ],
+)
+@login_required
+def bookmarks_page():
+    users_books_with_bookmarks_ids = list(
+        map(
+            lambda x: x.book_id,
+            db_ses.query(BookMarks).filter_by(user_id=current_user.id).all(),
+        )
+    )
+    print(users_books_with_bookmarks_ids)
+    books_with_bookmarks = []
+    genres = db_ses.query(Genres).all()
+    all_books = db_ses.query(Books)
+    for i in users_books_with_bookmarks_ids:
+        books_with_bookmarks.append(all_books.get(i))
+    print(books_with_bookmarks[0].title)
+    user_is_auth, admin = get_user_status()
+    return render_template(
+        "catalog.html",
+        title="Закладки",
+        user_is_auth=user_is_auth,
+        admin=admin,
+        books=books_with_bookmarks,
+        genres=genres,
+        user_id=current_user.id,
+        search=False,
+    )
+
+
 @catalog.route("/read")
 @login_required
 def read_book_in_catalog():
@@ -216,6 +252,11 @@ def read_book_in_catalog():
     page_number = request.args.get(
         "page", default=1, type=int
     )  # Получаем номер страницы
+    bookmark_of_book_page = (
+        db_ses.query(BookMarks)
+        .filter_by(user_id=current_user.id, book_id=book_id)
+        .first()
+    )
     book = db_ses.query(Books).get(book_id)
     if book:
         text = db_ses.query(TextOfBook).filter_by(book_id=book_id).first().text
@@ -256,6 +297,9 @@ def read_book_in_catalog():
         return render_template(
             "read_book.html",
             title=book.title,
+            bookmark_page=(
+                bookmark_of_book_page.page if bookmark_of_book_page else 0
+            ),
             user_is_auth=user_is_auth,
             admin=admin,
             text_of_book=enumerate(
@@ -553,3 +597,73 @@ def summarize_by_id():
             form=form,
             user_id=current_user.id,
         )
+
+
+@catalog.route(
+    "/add-bookmark",
+    methods=[
+        "POST",
+        "GET",
+    ],
+)
+@login_required
+def add_bookmark():
+    book_id = request.args.get(
+        "book_id",
+        default=None,
+        type=int,
+    )
+    page = request.args.get(
+        "page",
+        default=None,
+        type=int,
+    )
+    bookmark_of_user_of_current_book = (
+        db_ses.query(BookMarks)
+        .filter_by(user_id=current_user.id, book_id=book_id)
+        .first()
+    )
+    if bookmark_of_user_of_current_book:
+        bookmark_of_user_of_current_book.page = page
+        db_ses.commit()
+    else:
+        bookmark = BookMarks(
+            user_id=current_user.id,
+            book_id=book_id,
+            page=page,
+        )
+        db_ses.add(bookmark)
+        db_ses.commit()
+    return redirect(f"/catalog/read?book_id={book_id}&page={page}")
+
+
+@catalog.route(
+    "/delete-bookmark",
+    methods=[
+        "POST",
+        "GET",
+    ],
+)
+@login_required
+def delete_bookmark():
+    book_id = request.args.get(
+        "book_id",
+        default=None,
+        type=int,
+    )
+    page = request.args.get(
+        "page",
+        default=None,
+        type=int,
+    )
+    bookmark_of_user_of_current_book = (
+        db_ses.query(BookMarks)
+        .filter_by(user_id=current_user.id, book_id=book_id)
+        .first()
+    )
+    if bookmark_of_user_of_current_book:
+        db_ses.delete(bookmark_of_user_of_current_book)
+        db_ses.commit()
+    else:
+        return redirect(f"/catalog/read?book_id={book_id}&page={page}")
+    return redirect(f"/catalog/read?book_id={book_id}&page={page}")

@@ -54,3 +54,16 @@ class Users(SqlAlchemyBase, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
+
+    def get_data(self) -> dict:
+        """Возвращает данные о прочитанных книгах и сжатых книгах (ТОЛЬКО количество)
+
+        Returns:
+            dict[str[dict[str[int]]]]: словарь значений типа {'data': {'read-books': int, 'summarized_books': int}}
+        """
+        return {
+            "data": {
+                "read_books": self.read_books,
+                "summarized_books": self.summarized_books,
+            }
+        }

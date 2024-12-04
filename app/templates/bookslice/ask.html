@@ -13,7 +13,7 @@
       </p>
       {% elif mess["role"] == "assistant" %}
       <p class="text-start text-success-emphasis" style="max-width: 50rem;">
-        ИИ 🤖: {{ mess["text"]|safe }}
+        ИИ 🤖: {{ mess["text"] | safe }}
       </p>
       {% endif %}
       {% endfor %}

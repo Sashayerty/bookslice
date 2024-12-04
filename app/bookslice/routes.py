@@ -1,4 +1,11 @@
-from flask import Blueprint, redirect, render_template, request
+from flask import (
+    Blueprint,
+    jsonify,
+    make_response,
+    redirect,
+    render_template,
+    request,
+)
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app.bookslice.functions.notification_sender import (
@@ -6,6 +13,9 @@ from app.bookslice.functions.notification_sender import (
 )
 from app.bookslice.functions.search_friends import search_partial_match_fuzzy
 from app.models import Notifications, Users, db_session
+from app.models.authors import Authors
+from app.models.books import Books
+from app.models.books_of_user import BooksOfUser
 from app.models.friendships import Friendships
 from app.static.forms import LoginForm, RegisterForm
 from app.static.forms.chat import ChatForm
@@ -215,14 +225,18 @@ def friends():
             .filter_by(user_id=current_user.id)
             .all()
         ]
-        users_friends.append(current_user.id)
         all_users = db_ses.query(Users)
-        users_names = [
-            i.name
-            for i in all_users.filter(
-                Users.id != current_user.id, Users.id not in users_friends
-            ).all()
-        ]
+        users_names = list(
+            map(
+                lambda x: x.name,
+                list(
+                    filter(
+                        lambda x: x.id not in users_friends,
+                        all_users.filter(Users.id != current_user.id).all(),
+                    )
+                ),
+            )
+        )
         searched_users = list(
             set(search_partial_match_fuzzy(users_names, search))
         )
@@ -380,3 +394,46 @@ def notification_read(notification_id):
     notification.delete()
     db_ses.commit()
     return redirect("/notifications")
+
+
+@bookslice.route(
+    "/get-user-data-for-ai",
+    methods=[
+        "POST",
+        "GET",
+    ],
+)
+def get_user_data_for_ai():
+    user_id = request.args.get("user_id", default=None, type=int)
+    if user_id:
+        read_books_ids = list(
+            map(
+                lambda x: x.book_id,
+                db_ses.query(BooksOfUser).filter_by(user_id=user_id).all(),
+            )
+        )
+        all_books = db_ses.query(Books)
+        all_authors = db_ses.query(Authors)
+        read_books_data = []
+        for i in read_books_ids:
+            book = all_books.filter_by(id=i).first()
+            read_books_data.append(
+                {
+                    "title": book.title,
+                    "author": all_authors.filter_by(id=book.author)
+                    .first()
+                    .name,
+                }
+            )
+        user_data = (
+            db_ses.query(Users).filter_by(id=user_id).first().get_data()
+        )
+        response_data = {
+            "read_books_data": read_books_data,
+            "user_data": user_data,
+        }
+        response = make_response(jsonify(response_data))
+        response.headers["Content-Type"] = "application/json; charset=utf-8"
+        return response
+    else:
+        return jsonify({"error": "User id not found."})

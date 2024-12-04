@@ -13,6 +13,7 @@
     </button>
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="/catalog">Нет</a></li>
+      <li><a class="dropdown-item" href="/catalog/bookmarks">Закладки</a></li>
       {% for genre in genres %}
       <li>
         <a class="dropdown-item" href="/catalog/{{ genre.en_name }}">{{ genre.name }}</a>

@@ -181,7 +181,7 @@ def ask():
     """Страница для общения с ИИ"""
     form = ChatForm()
     if form.validate_on_submit():
-        messages = ai.message(form.message.data)
+        messages = ai.message(form.message.data, user_id=current_user.id)
         messages = ai.get_messages()
         return render_template(
             "ask.html",
@@ -412,9 +412,17 @@ def get_user_data_for_ai():
                 db_ses.query(BooksOfUser).filter_by(user_id=user_id).all(),
             )
         )
+        read_books_ids_all = list(
+            map(
+                lambda x: x.book_id,
+                db_ses.query(BooksOfUser).all(),
+            )
+        )
         all_books = db_ses.query(Books)
         all_authors = db_ses.query(Authors)
+
         read_books_data = []
+        book_data_all = []
         for i in read_books_ids:
             book = all_books.filter_by(id=i).first()
             read_books_data.append(
@@ -425,12 +433,24 @@ def get_user_data_for_ai():
                     .name,
                 }
             )
+        for i in read_books_ids_all:
+            book = all_books.filter_by(id=i).first()
+            book_data_all.append(
+                {
+                    "title": book.title,
+                    "author": all_authors.filter_by(id=book.author)
+                    .first()
+                    .name,
+                }
+            )
+
         user_data = (
             db_ses.query(Users).filter_by(id=user_id).first().get_data()
         )
         response_data = {
-            "read_books_data": read_books_data,
-            "user_data": user_data,
+            "all_books_in_cataloh": book_data_all,
+            "readed_books_by_user": read_books_data,
+            "user_data_common": user_data,
         }
         response = make_response(jsonify(response_data))
         response.headers["Content-Type"] = "application/json; charset=utf-8"

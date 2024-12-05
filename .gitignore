@@ -70,6 +70,7 @@ cover/
 *.mo
 *.pot
 
+
 request.py
 
 # Django stuff:

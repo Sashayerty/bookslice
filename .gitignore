@@ -11,6 +11,8 @@ fixtures
 fixtures.py
 TODO.md
 
+*ngrok*
+
 
 # C extensions
 *.so

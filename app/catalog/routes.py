@@ -419,8 +419,10 @@ def summarize_by_id():
     achievements = db_ses.query(Achievements).all()
     user_achievements = db_ses.query(AchievementsOfUsers)
     book_id = request.args.get("book_id", default=None, type=int)
-    form = SumByIdForm() if book_id else SumForm()
-
+    if book_id:
+        form = SumByIdForm()
+    else:
+        form = SumForm()
     if book_id:
         book = db_ses.query(Books).get(book_id)
         if book:

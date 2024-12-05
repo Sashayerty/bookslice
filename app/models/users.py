@@ -44,9 +44,11 @@ class Users(SqlAlchemyBase, UserMixin):
     )
     read_books = sqlalchemy.Column(
         sqlalchemy.Integer,
+        default=0,
     )
     summarized_books = sqlalchemy.Column(
         sqlalchemy.Integer,
+        default=0,
     )
 
     def set_password(self, password):

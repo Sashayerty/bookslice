@@ -1,7 +1,6 @@
 from flask import (
     Blueprint,
     jsonify,
-    make_response,
     redirect,
     render_template,
     request,
@@ -414,54 +413,41 @@ def notification_read(notification_id):
 def get_user_data_for_ai():
     user_id = request.args.get("user_id", default=None, type=int)
     if user_id:
-        read_books_ids = list(
+        user = db_ses.query(Users).get(user_id)
+        read_books_of_user_ids = list(
             map(
                 lambda x: x.book_id,
-                db_ses.query(BooksOfUser).filter_by(user_id=user_id).all(),
+                db_ses.query(BooksOfUser).filter_by(
+                    user_id=user_id,
+                    status="Прочитал",
+                ),
             )
         )
-        read_books_ids_all = list(
-            map(
-                lambda x: x.book_id,
-                db_ses.query(BooksOfUser).all(),
-            )
-        )
+        read_books_of_user_cartages = []
         all_books = db_ses.query(Books)
         all_authors = db_ses.query(Authors)
-
-        read_books_data = []
-        book_data_all = []
-        for i in read_books_ids:
+        for i in read_books_of_user_ids:
             book = all_books.filter_by(id=i).first()
-            read_books_data.append(
-                {
-                    "title": book.title,
-                    "author": all_authors.filter_by(id=book.author)
-                    .first()
-                    .name,
-                }
-            )
-        for i in read_books_ids_all:
-            book = all_books.filter_by(id=i).first()
-            book_data_all.append(
-                {
-                    "title": book.title,
-                    "author": all_authors.filter_by(id=book.author)
-                    .first()
-                    .name,
-                }
-            )
-
-        user_data = (
-            db_ses.query(Users).filter_by(id=user_id).first().get_data()
-        )
-        response_data = {
-            "all_books_in_cataloh": book_data_all,
-            "readed_books_by_user": read_books_data,
-            "user_data_common": user_data,
+            author = all_authors.filter_by(id=book.author).first().name
+            read_books_of_user_cartages.append((book.title, author))
+        user_data = {
+            "read_stats": {
+                "count_of_read_books": user.read_books,
+                "count_of_summarized_books": user.summarized_books,
+            },
+            "read_books": read_books_of_user_cartages,
         }
-        response = make_response(jsonify(response_data))
-        response.headers["Content-Type"] = "application/json; charset=utf-8"
-        return response
+        all_books_ids = list(map(lambda x: x.id, all_books.all()))
+        all_books_list_of_cartages = []
+        for i in all_books_ids:
+            book = all_books.filter_by(id=i).first()
+            author = all_authors.filter_by(id=book.author).first().name
+            all_books_list_of_cartages.append((book.title, author))
+        return jsonify(
+            {
+                "read_data_of_user": user_data,
+                "data_of_books_of_all_catalog": all_books_list_of_cartages,
+            }
+        )
     else:
         return jsonify({"error": "User id not found."})

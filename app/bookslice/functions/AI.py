@@ -10,7 +10,7 @@ class AI:
     def __init__(self) -> None:
         self.client = Mistral(api_key=api_key)
         self.msgs = []
-        self.promt = {"messages": self.msgs}
+        self.prompt = {"messages": self.msgs}
 
     def message(self, mess, user_id):
         response = requests.get(
@@ -18,23 +18,26 @@ class AI:
         ).text
         print(response)
         self.msgs.append({"role": "user", "text": mess})
-        self.promt["messages"] = self.msgs
+        self.prompt["messages"] = self.msgs
         self.chat_response = self.client.chat.complete(
             model="mistral-large-latest",
             messages=[
                 {
                     "role": "user",
-                    "content": f"""Ты - ИИ помощник для сайта-соцсети, посвящённой чтению. Ты должен
+                    "content": f"""Ты - ИИ помощник для сайта-соцсети BookSlice, посвящённой чтению. У нас доступно
+                    отслеживание своего прогресса и добавление в друзья + отслеживание прогресса друзей Ты должен
                     поддерживать диалог, нейтрально относясь к острым темам. Ответы должны быть
                     ТОЛЬКО на русском. Не делай таблицы.
-                    Тебе данные с помощью json файла{response}. all_books_in_cataloh - все книги в каталоге с названием и автором
-                    которые следует советовать во время диалога. readed_books_by_user - книги, прочитанные юзером
-                    user_data_common - общая информация по юзеру. История сообщений с юзером:{self.msgs}""",
+                    Тебе данные с помощью json файла {response}. data_of_books_of_all_catalog -
+                    все книги в каталоге с названием и автором
+                    которые следует советовать во время диалога (по ситуации). read_data_of_user - книги,
+                    прочитанные юзером
+                    и общая информация по юзеру. История сообщений с юзером:{self.msgs}""",
                 },
             ],
         )
         response = markdown(self.chat_response.choices[0].message.content)
-        self.promt["messages"].append(
+        self.prompt["messages"].append(
             {
                 "role": "assistant",
                 "text": response,
@@ -43,7 +46,7 @@ class AI:
         return response
 
     def get_messages(self):
-        return self.promt["messages"]
+        return self.prompt["messages"]
 
     def set_messages(self, messages):
         self.msgs = messages

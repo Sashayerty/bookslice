@@ -11,6 +11,8 @@ fixtures
 fixtures.py
 TODO.md
 
+test.json
+
 *ngrok*
 
 
@@ -67,6 +69,8 @@ cover/
 # Translations
 *.mo
 *.pot
+
+request.py
 
 # Django stuff:
 *.log

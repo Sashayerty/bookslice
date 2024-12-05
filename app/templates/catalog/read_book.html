@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block content %}
 <div class="book-container container fs-4">
+  {% if book %}
   <div class="d-grid align-items-center justify-content-end">
     {% if current_page != bookmark_page %}
     <a class="btn btn-secondary" href="/catalog/add-bookmark?book_id={{ book.id }}&page={{ current_page }}">
@@ -18,6 +19,7 @@
     </a>
     {% endif %}
   </div>
+  {% endif %}
 
   {% if current_page == 1 %} {% if author %}
   <!-- Автор книги (если есть) -->

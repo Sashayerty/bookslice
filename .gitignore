@@ -66,6 +66,8 @@ coverage.xml
 .pytest_cache/
 cover/
 
+*.mp4
+
 # Translations
 *.mo
 *.pot

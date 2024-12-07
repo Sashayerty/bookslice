@@ -29,7 +29,7 @@
   <p class="text-center fs-2 fw-semibold my-4">{{ book.title }}</p>
   {% endif %} {% endif %} {% if sum_text %}
   <p class="text-center fs-2 fw-semibold my-4">{{ sum_text }}</p>
-  {% endif %} {% for page in text_of_book %} {{ page[1] | safe }} {% endfor %}
+  {% endif %} {% for page in text %} {{ page[1] | safe }} {% endfor %}
 </div>
 
 {% if not summarizing %}

@@ -429,7 +429,9 @@ def get_user_data_for_ai():
         for i in read_books_of_user_ids:
             book = all_books.filter_by(id=i).first()
             author = all_authors.filter_by(id=book.author).first().name
-            read_books_of_user_cartages.append((book.title, author))
+            read_books_of_user_cartages.append(
+                {"id": i, "title": book.title, "author": author}
+            )
         user_data = {
             "read_stats": {
                 "count_of_read_books": user.read_books,
@@ -442,7 +444,9 @@ def get_user_data_for_ai():
         for i in all_books_ids:
             book = all_books.filter_by(id=i).first()
             author = all_authors.filter_by(id=book.author).first().name
-            all_books_list_of_cartages.append((book.title, author))
+            all_books_list_of_cartages.append(
+                {"id": i, "title": book.title, "author": author}
+            )
         return jsonify(
             {
                 "read_data_of_user": user_data,

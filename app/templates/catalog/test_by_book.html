@@ -4,5 +4,43 @@
     <p class="fs-2 fw-semibold text-center">
         Пройти тест по произведению {{ book.title }}
     </p>
+    <form id="testForm" method="POST" action="/catalog/complete-test?book_id={{ book_id }}">
+        {% for i in ["1", "2", "3", "4", "5"] %}
+        <p class="fs-4">{{ i }}. {{ test[i]["question"] }}</p>
+        {% for n in ["1", "2", "3"] %}
+        <div class="form-check">
+            <input type="radio" name="question{{ i }}" id="flexRadioDefault{{ i }}{{ n }}" value="{{ n }}">
+            <label class="form-check-label" for="flexRadioDefault{{ i }}{{ n }}">
+                {{ test[i]["choices"][n] }}
+            </label>
+        </div>
+        {% endfor %}
+        {% endfor %}
+        <div class="container my-3 d-flex justify-content-center">
+            <button type="submit" class="btn btn-secondary shadow-lg" onclick="submitForm()">Закончить тест</button>
+        </div>
+    </form>
 </div>
+<script>
+    function submitForm() {
+        const form = document.getElementById('testForm');
+        const radioButtons = form.querySelectorAll('input[type="radio"]');
+        let allAnswered = true;
+
+        // Проверяем, что хотя бы одна радиокнопка выбрана для каждого вопроса
+        for (let i = 1; i <= 5; i++) {
+            const questionRadios = form.querySelectorAll(`input[name="question${i}"]:checked`);
+            if (questionRadios.length === 0) {
+                allAnswered = false;
+                break;
+            }
+        }
+
+        if (allAnswered) {
+            form.submit();
+        } else {
+            alert('Пожалуйста, ответьте на все вопросы перед отправкой.')
+        }
+    }
+</script>
 {% endblock content %}

@@ -7,9 +7,15 @@ from flask_login import LoginManager, current_user
 from app.admin.views.bookmarks_view import BookMarksView
 from app.admin.views.friend_requests import FriendRequestsView
 from app.admin.views.friendships_view import FriendshipsView
+from app.admin.views.summarized_books_of_user_view import (
+    SummarizedBooksOfUserView,
+)
+from app.admin.views.tests_of_user_view import TestsOfUserView
 from app.config import config
 from app.models.bookmarks import BookMarks
 from app.models.friendships import Friendships
+from app.models.summarized_books_of_user import SummarizedBooksOfUser
+from app.models.tests_of_user import TestsOfUser
 
 from .admin import (
     AchievementsOfUsersView,
@@ -120,6 +126,18 @@ def create_app():
             db_ses,
             name="Закладки",
             category="Книги",
+        ),
+        SummarizedBooksOfUserView(
+            SummarizedBooksOfUser,
+            db_ses,
+            name="Сжатые тексты",
+            category="Суммаризация/Тесты",
+        ),
+        TestsOfUserView(
+            TestsOfUser,
+            db_ses,
+            name="Тесты юзеров",
+            category="Суммаризация/Тесты",
         ),
     )
     login_manager = LoginManager()

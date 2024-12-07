@@ -1,6 +1,10 @@
+import json
+
+import requests
+from dotenv import dotenv_values
+from mistralai import Mistral
 from sqlalchemy.orm import Session
 
-from app.models.books import Books
 from app.models.db_session import create_session, global_init
 
 
@@ -12,8 +16,7 @@ def session_create() -> Session:
 
 def recommendations(
     db_session: Session = session_create(),
-    authors: list[int] = None,
-    genres: list[int] = None,
+    user_id: int = None,
     read_books: list[int] = [],
 ) -> set[int]:
     """Функция для рекомендаций пользователю.
@@ -27,38 +30,40 @@ def recommendations(
     Returns:
         ids_of_books (set[int] | None): Множество идентификаторов книг, которые рекомендованы пользователю.
     """
-    ids_of_books = set()
-    books = db_session.query(Books)
+    api_key = dotenv_values("./.env")["MISTRAL_API_KEY"]
+    client = Mistral(api_key=api_key)
+    response = requests.get(
+        f"http://127.0.0.1:5000/get-user-data-for-ai?user_id={user_id}"
+    ).text
+    base = """
+    Error:
+    {
+        "data": []
+    }
+    Good:
+    {
+        "data": [1, 2, 3, 4]
+    }
+    """
+    prompt = f"""Ты - рекомендательная система. Твоя задача прислать список id книг,
+    которые ты рекомендуешь к прочтению на основе УЖЕ прочитанных книг. Передавать нужно только те,
+    которые есть в каталоге.
+    Если тебе передается "error": "User id not found.", то возвращай []. Тебе данные с помощью json файла
+    {response}. data_of_books_of_all_catalog -
+    все книги в каталоге с названием и автором. read_data_of_user - книги,
+    прочитанные юзером
+    и общая информация по юзеру. Пример твоего ответа: {base}"""
 
-    if authors and genres:  # Если есть авторы и жанры
-        for author in authors:
-            for genre in genres:
-                for i in list(
-                    books.filter_by(
-                        author=author,
-                        genre=genre,
-                    ).all()
-                ):
-                    if i.id not in read_books:
-                        ids_of_books.add(i.id)
-    if authors:  # Если есть авторы
-        for author in authors:
-            for i in list(
-                books.filter_by(
-                    author=author,
-                ).all()
-            ):
-                if i.id not in read_books:
-                    ids_of_books.add(i.id)
-    if genres:  # Если есть жанры
-        for genre in genres:
-            for i in list(
-                books.filter_by(
-                    genre=genre,
-                ).all()
-            ):
-                if i.id not in read_books:
-                    ids_of_books.add(i.id)
-    elif not (authors and genres):  # Если нет авторов и жанров
-        return None
-    return ids_of_books if ids_of_books else None
+    response = client.chat.complete(
+        model="pixtral-large-latest",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt,
+            },
+        ],
+        response_format={
+            "type": "json_object",
+        },
+    )
+    return json.loads(response.choices[0].message.content)["data"]

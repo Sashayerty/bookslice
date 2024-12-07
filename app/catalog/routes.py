@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, redirect, render_template, request
 from flask_login import current_user, login_required
 
@@ -5,6 +7,8 @@ from app.catalog.functions.recommendations import recommendations
 from app.catalog.functions.search_func import search_partial_match_fuzzy
 from app.catalog.functions.split_book import split_into_pages
 from app.catalog.functions.sum_alg import summarize_text
+from app.llm_functions.summarization.summarize_text import summarizer
+from app.llm_functions.tests_generating.test_generate import generate_test
 from app.models import (
     Authors,
     Books,
@@ -18,6 +22,8 @@ from app.models.achievements import Achievements
 from app.models.achievements_of_users import AchievementsOfUsers
 from app.models.bookmarks import BookMarks
 from app.models.notifications import Notifications
+from app.models.summarized_books_of_user import SummarizedBooksOfUser
+from app.models.tests_of_user import TestsOfUser
 from app.static.forms.sum_by_id_form import SumByIdForm
 from app.static.forms.sum_form import SumForm
 
@@ -82,8 +88,7 @@ def index():
                 db_ses.query(Books).get(i.book_id).genre
             )
         recommendations_books = recommendations(
-            authors=read_books_stats["authors"],
-            genres=read_books_stats["genres"],
+            user_id=current_user.id,
             read_books=[i.book_id for i in read_books],
         )
         if recommendations_books:
@@ -177,8 +182,7 @@ def sort_catalog_by_genre(genre_name: str):
                     db_ses.query(Books).get(i.book_id).genre
                 )
             recommendations_books = recommendations(
-                authors=read_books_stats["authors"],
-                genres=read_books_stats["genres"],
+                user_id=current_user.id,
                 read_books=[i.book_id for i in read_books],
             )
             recommended_books = [
@@ -302,7 +306,7 @@ def read_book_in_catalog():
             ),
             user_is_auth=user_is_auth,
             admin=admin,
-            text_of_book=enumerate(
+            text=enumerate(
                 paginated_text, start=start_index + 1
             ),  # Передаем только текущие страницы
             len_of_list_of_pages=total_pages,
@@ -399,6 +403,43 @@ def test_by_book():
     """Страница теста по книге"""
     book_id = request.args.get("book_id", default=None, type=int)
     book = db_ses.query(Books).get(book_id)
+    text_of_summarized_book = (
+        db_ses.query(SummarizedBooksOfUser).filter_by(book_id=book_id).first()
+    )
+    test = (
+        db_ses.query(TestsOfUser)
+        .filter_by(user_id=current_user.id, summarized_book_id=book_id)
+        .first()
+    )
+    if test:
+        test = json.loads(test.test)
+    else:
+        if text_of_summarized_book:
+            text_of_summarized_book = text_of_summarized_book.text
+        else:
+            text_of_summarized_book = " ".join(
+                summarizer(
+                    db_ses.query(TextOfBook)
+                    .filter_by(book_id=book_id)
+                    .first()
+                    .text
+                )
+            )
+            text_of_summarized_book_to_data_base = SummarizedBooksOfUser(
+                user_id=current_user.id,
+                book_id=book_id,
+                text=text_of_summarized_book,
+            )
+            db_ses.add(text_of_summarized_book_to_data_base)
+            db_ses.commit()
+        test = generate_test(text=text_of_summarized_book)
+        test_to_data_base = TestsOfUser(
+            user_id=current_user.id,
+            summarized_book_id=1,
+            test=json.dumps(test, ensure_ascii=False),
+        )
+        db_ses.add(test_to_data_base)
+        db_ses.commit()
     if book:
         user_is_auth, admin = get_user_status()
         return render_template(
@@ -408,6 +449,8 @@ def test_by_book():
             admin=admin,
             book=book,
             user_id=current_user.id,
+            test=test,
+            book_id=book_id,
         )
     return redirect_not_found()
 
@@ -470,7 +513,7 @@ def summarize_by_id():
                         "read_book.html",
                         summarizing=True,
                         title=f"Сжатое произведение {book.title}",
-                        text_of_book=enumerate(text, start=1),
+                        text=enumerate(text, start=1),
                         sum_text=f"Сжатое произведение {book.title}",
                         user_is_auth=current_user.is_authenticated,
                         admin=(
@@ -522,7 +565,7 @@ def summarize_by_id():
                         "read_book.html",
                         summarizing=True,
                         title=f"Сжатое произведение {book.title}",
-                        text_of_book=enumerate(text, start=1),
+                        text=enumerate(text, start=1),
                         sum_text=f"Сжатое произведение {book.title}",
                         user_is_auth=current_user.is_authenticated,
                         admin=(
@@ -579,7 +622,7 @@ def summarize_by_id():
                 "read_book.html",
                 summarizing=True,
                 title="Сжатая книга",
-                text_of_book=enumerate(text, start=1),
+                text=enumerate(text, start=1),
                 sum_text="Сжатый текст",
                 user_is_auth=current_user.is_authenticated,
                 admin=(
@@ -669,3 +712,96 @@ def delete_bookmark():
     else:
         return redirect(f"/catalog/read?book_id={book_id}&page={page}")
     return redirect(f"/catalog/read?book_id={book_id}&page={page}")
+
+
+@catalog.route("/complete-test", methods=["POST", "GET"])
+@login_required
+def complete_test():
+    book_id = request.args.get("book_id", default=None, type=int)
+    test = (
+        db_ses.query(TestsOfUser)
+        .filter_by(user_id=current_user.id, summarized_book_id=book_id)
+        .first()
+        .test
+    )
+    answers_of_user = {
+        key: value
+        for key, value in request.form.items()
+        if key.startswith("question")
+    }
+    print(test)
+    print(answers_of_user)
+
+    result_to_user = []
+
+    for i in range(1, 6):
+        if (
+            json.loads(test)[str(i)]["right_answer"]
+            != answers_of_user[f"question{i}"]
+        ):
+            result_to_user.append(False)
+        else:
+            result_to_user.append(True)
+    print(result_to_user)
+
+    return render_template(
+        "test_result.html",
+        title="Результаты теста",
+        results=result_to_user,
+        user_is_auth=current_user.is_authenticated,
+        admin=(current_user.admin if current_user.is_authenticated else False),
+    )
+
+
+@catalog.route("read-summarized-book", methods=["POST", "GET"])
+@login_required
+def read_summarized_book():
+    book_id = request.args.get("book_id", default=None, type=int)
+    page_number = request.args.get("page", default=1, type=int)
+    summarized_book = (
+        db_ses.query(SummarizedBooksOfUser).filter_by(book_id=book_id).first()
+    )
+    if summarized_book:
+        text = summarized_book.text
+    else:
+        text_of_book = (
+            db_ses.query(TextOfBook).filter_by(book_id=book_id).first().text
+        )
+        text = summarizer(text_of_book)
+        text_to_data_base = SummarizedBooksOfUser(
+            user_id=current_user.id,
+            book_id=book_id,
+            text="".join(text),
+        )
+        db_ses.add(text_to_data_base)
+        db_ses.commit()
+
+    book = db_ses.query(Books).filter_by(id=book_id).first()
+    text = split_into_pages(text="".join(text))
+    # Настройка пагинации
+    items_per_page = 1  # Количество страниц на одной странице
+    total_pages = len(text)  # Общее количество страниц
+
+    # Проверка на превышение номера страницы
+    if page_number > total_pages:
+        return redirect_not_found()  # Перенаправление на страницу не найдено
+    start_index = (page_number - 1) * items_per_page
+    end_index = start_index + items_per_page
+    text = text[
+        start_index:end_index
+    ]  # Получаем страницы для текущей страницы
+    print(text)
+
+    return render_template(
+        "read_book.html",
+        summarizing=True,
+        book=book,
+        title=f"Сжатое произведение {book.title}",
+        text=enumerate(text, start=1),
+        sum_text=f"Сжатое произведение {book.title}",
+        current_page=page_number,
+        total_pages=total_pages,
+        user_is_auth=current_user.is_authenticated,
+        admin=(current_user.admin if current_user.is_authenticated else False),
+        user_id=current_user.id,
+    )

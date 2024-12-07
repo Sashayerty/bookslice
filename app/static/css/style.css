@@ -142,3 +142,34 @@ li {
 .book-container {
   max-width: 100vh;
 }
+
+#flexRadioDefault {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Стили для первого input (Сильное сжатие) */
+#flexRadioDefault11,
+#flexRadioDefault12,
+#flexRadioDefault13,
+#flexRadioDefault21,
+#flexRadioDefault22,
+#flexRadioDefault23,
+#flexRadioDefault31,
+#flexRadioDefault32,
+#flexRadioDefault33,
+#flexRadioDefault41,
+#flexRadioDefault42,
+#flexRadioDefault43,
+#flexRadioDefault51,
+#flexRadioDefault52,
+#flexRadioDefault53 {
+  width: 20px;
+  height: 20px;
+  accent-color: #6c757d;
+  /* Цвет кнопки */
+  cursor: pointer;
+  border: 2px solid #6c757d;
+  /* Цвет рамки */
+  margin-right: 10px;
+}

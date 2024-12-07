@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 from mistralai import Mistral
 
 
-def generate_test(text: str):
+def generate_test(text: str) -> dict:
     """Функция для генерации тестов
 
     Keyword arguments:

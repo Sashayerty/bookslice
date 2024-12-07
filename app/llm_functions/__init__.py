@@ -1,6 +1,6 @@
 from .summarization import (
     check_text_quality,
-    join_text,
+    join_text_function,
     split_text_into_chunks,
     summarize_text,
 )

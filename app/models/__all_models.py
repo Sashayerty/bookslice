@@ -8,6 +8,8 @@ from . import (
     friendships,
     genres,
     notifications,
+    summarized_books_of_user,
+    tests_of_user,
     text_of_book,
     users,
 )

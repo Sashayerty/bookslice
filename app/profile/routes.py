@@ -88,7 +88,7 @@ def index():
             title="Профиль",
             achievements=achievements_names,
             ach=True,
-            **user_data
+            **user_data,
         )
 
     elif page == "stats":
@@ -99,7 +99,7 @@ def index():
             summarized_books=current_user.summarized_books or 0,
             speed_of_reading=current_user.speed_of_reading,
             read_data=True,
-            **user_data
+            **user_data,
         )
 
 
@@ -172,7 +172,7 @@ def profile_of_user(user_id: int):
             title=user.name,
             achievements=achievements_names,
             ach=True,
-            **user_data
+            **user_data,
         )
 
     elif page == "stats":
@@ -183,7 +183,7 @@ def profile_of_user(user_id: int):
             summarized_books=user.summarized_books or 0,
             speed_of_reading=user.speed_of_reading,
             read_data=True,
-            **user_data
+            **user_data,
         )
 
 

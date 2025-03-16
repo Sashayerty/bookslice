@@ -378,6 +378,7 @@ def dismiss_friend_request(user_id):
         "POST",
     ],
 )
+@login_required
 def notifications():
     """Отображение уведомлений юзера"""
     notifications_list = (

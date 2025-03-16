@@ -1,7 +1,6 @@
-# AI_olimp_2024
-
-[![Black](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/black.yml/badge.svg?branch=main&event=push)](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/black.yml)
-[![Flake8](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/flake8.yml/badge.svg?branch=main&event=push)](https://github.com/Sashayerty/AI_olimp_2024/actions/workflows/flake8.yml)  
+# BookSlice
+[![Black](https://github.com/Sashayerty/bookslice/actions/workflows/black.yml/badge.svg?branch=main&event=push)](https://github.com/Sashayerty/bookslice/actions/workflows/black.yml)
+[![Flake8](https://github.com/Sashayerty/bookslice/actions/workflows/flake8.yml/badge.svg?branch=main&event=push)](https://github.com/Sashayerty/bookslice/actions/workflows/flake8.yml)  
 ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
 ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
@@ -25,7 +24,7 @@
 ## Список папок и файлов
 
 ```bash
-AI_OLIMP_2024/
+bookslice/
 ├── .github/                            # Папка гитхаба
 │   └── workflows/                      # CI/CD проекта
 │       ├── black.yml                   # Проверка по black
@@ -61,14 +60,16 @@ MISTRAL_API_KEY=your-mistral-api-secret-key
 ### 1. Клонируем git-repo
 
 ```bash
-git clone https://github.com/Sashayerty/AI_olimp_2024.git
+git clone https://github.com/Sashayerty/bookslice --depth 1
 ```
 
 ### 2. Переходим в нужную директорию
 
 ```bash
-cd ./AI_olimp_2024
+cd ./bookslice
 ```
+
+## С помощью pip
 
 ### 3. Создаём venv
 
@@ -106,7 +107,21 @@ python run.py
 python3 run.py
 ```
 
-### 7. Видим что-то такое
+## С помощью uv (рекомендовано)
+
+### 3. Синхронизируем зависимости
+
+```bash
+uv sync --group prod # Так же создает .venv
+```
+
+### 4. Запускаем проект
+
+```bash
+uv run run.py
+```
+
+### Видим что-то такое
 
 ```python
  * Подключение к базе данных по адресу sqlite:///db/app.db?check_same_thread=False
